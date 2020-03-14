@@ -1,0 +1,595 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>如何在后台封装el-tree所需要的数据格式 | Hanstrovsky</title>
+    <meta property="og:title" content="如何在后台封装el-tree所需要的数据格式 - Hanstrovsky">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2020-03-01T12:13:19&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2020-03-01T12:13:19&#43;08:00'>
+        
+    <meta name="Keywords" content="Java,java,Hanstrovsky,it,博客,项目管理,软件架构,基金,ETF,漫画">
+    <meta name="description" content="如何在后台封装el-tree所需要的数据格式">
+        <meta name="author" content="Hanstrovsky">
+        
+    <meta property="og:url" content="https://www.hanstrovsky.com/post/5.%E5%A6%82%E4%BD%95%E5%9C%A8%E5%90%8E%E5%8F%B0%E5%B0%81%E8%A3%85el-tree%E6%89%80%E9%9C%80%E8%A6%81%E7%9A%84%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F/">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-xxxxxxxxxxxxxx",
+        enable_page_level_ads: true
+    });
+    </script>
+    
+
+
+    
+    
+        <link rel="stylesheet" href='/css/douban.css'>
+    
+        <link rel="stylesheet" href='/css/other.css'>
+    
+</head>
+
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://www.hanstrovsky.com">
+                        Hanstrovsky
+                    </a>
+                
+                <p class="description">专注于Java、Go语言(golang)、移动互联网、项目管理、软件架构</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://www.hanstrovsky.com">首页</a>
+                    
+                    <a  href="https://www.hanstrovsky.com/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://www.hanstrovsky.com/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<body>
+  <div id="body">
+    <div class="container">
+      <div class="col-group">
+
+        <div class="col-8" id="main">
+          
+<div class="res-cons">
+    <style type="text/css">
+    .post-toc {
+        position: fixed;
+        width: 200px;
+        margin-left: -210px;
+        padding: 5px 10px;
+        font-family: Athelas, STHeiti, Microsoft Yahei, serif;
+        font-size: 12px;
+        border: 1px solid rgba(0, 0, 0, .07);
+        border-radius: 5px;
+        background-color: rgba(255, 255, 255, 0.98);
+        background-clip: padding-box;
+        -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, .125);
+        box-shadow: 1px 1px 2px rgba(0, 0, 0, .125);
+        word-wrap: break-word;
+        white-space: nowrap;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        z-index: 999;
+        cursor: pointer;
+        max-height: 70%;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .post-toc .post-toc-title {
+        width: 100%;
+        margin: 0 auto;
+        font-size: 20px;
+        font-weight: 400;
+        text-transform: uppercase;
+        text-align: center;
+    }
+
+    .post-toc .post-toc-content {
+        font-size: 15px;
+    }
+
+    .post-toc .post-toc-content>nav>ul {
+        margin: 10px 0;
+    }
+
+    .post-toc .post-toc-content ul {
+        padding-left: 20px;
+        list-style: square;
+        margin: 0.5em;
+        line-height: 1.8em;
+    }
+
+    .post-toc .post-toc-content ul ul {
+        padding-left: 15px;
+        display: none;
+    }
+
+    @media print,
+    screen and (max-width:1057px) {
+        .post-toc {
+            display: none;
+        }
+    }
+</style>
+<div class="post-toc" style="position: absolute; top: 188px;">
+    <h2 class="post-toc-title">文章目录</h2>
+    <div class="post-toc-content">
+        <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#数据格式">数据格式：</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#代码实现">代码实现：</a>
+      <ul>
+        <li><a href="#1设计实体类">1、设计实体类</a></li>
+        <li><a href="#2业务代码">2、业务代码</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#datatree接口">DataTree接口：</a></li>
+        <li><a href="#工具类实现">工具类实现：</a></li>
+        <li><a href="#使用方式">使用方式：</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var postToc = $(".post-toc");
+        if (postToc.length) {
+            var leftPos = $("#main").offset().left;
+            if(leftPos<220){
+                postToc.css({"width":leftPos-10,"margin-left":(0-leftPos)})
+            }
+
+            var t = postToc.offset().top - 20,
+                a = {
+                    start: {
+                        position: "absolute",
+                        top: t
+                    },
+                    process: {
+                        position: "fixed",
+                        top: 20
+                    },
+                };
+            $(window).scroll(function () {
+                var e = $(window).scrollTop();
+                e < t ? postToc.css(a.start) : postToc.css(a.process)
+            })
+        }
+    })
+</script>
+    <article class="post">
+        <header>
+            <h1 class="post-title">如何在后台封装el-tree所需要的数据格式</h1>
+        </header>
+        <date class="post-meta meta-date">
+            2020年3月1日
+        </date>
+        
+        <div class="post-meta">
+            <span>|</span>
+            
+            <span class="meta-category"><a href='https://www.hanstrovsky.com/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0'>技术文章</a></span>
+            
+        </div>
+        
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">|<span id="busuanzi_value_page_pv"></span><span>
+                    阅读</span></span>
+        </div>
+        
+        
+        <div class="clear" style="display: none">
+            <div class="toc-article">
+                <div class="toc-title">文章目录</div>
+            </div>
+        </div>
+        
+        <div class="post-content">
+            <h1 id="背景">背景</h1>
+<p>最近遇到了一个分层级展示指标的需求，前端使用el-tree树形组件，要求按官方文档的格式提供数据。</p>
+<h3 id="数据格式">数据格式：</h3>
+<pre><code>    id: 1,
+    label: '一级 1',
+    children: 
+        id: 4,
+        label: '二级 1-1',
+        children: 
+            id: 9,
+            label: '三级 1-1-1'，
+            children: ...    
+</code></pre><h1 id="封装思路">封装思路</h1>
+<p>1、首先我们需要获取到所有的节点，新建一个集合result来保存所有顶级节点，也就是parentId为空的或指定值。</p>
+<p>2、然后我们需要找出二级节点存入到顶级节点的childList中，找到三级节点存入到二级节点的childList中，依次类推，最后将result返回。</p>
+<h2 id="代码实现">代码实现：</h2>
+<h3 id="1设计实体类">1、设计实体类</h3>
+<pre><code>@Data
+public class Evaluation {
+    private String id;
+    private String label;
+    private String parentId;
+    private List&lt;Evaluation&gt; childList;
+}
+</code></pre><h3 id="2业务代码">2、业务代码</h3>
+<pre><code>public class EvaluationService {
+    
+    private EvaluationDao evaluationDao;
+
+    public List&lt;Evaluation&gt; getEvaluations() {
+        // 查出所有指标
+        List&lt;Evaluation&gt; all = evaluationDao.findAll();
+        
+        // 把所有的数据都放到map中
+        Map&lt;String, Evaluation&gt; treeMap = new HashMap&lt;&gt;();
+        for (int i = 0; i &lt; all.size() &amp;&amp; !all.isEmpty(); i++) {
+            // 元素的id为键，元素本身为值
+            treeMap.put(all.get(i).getId(), all.get(i));
+        }
+        
+        // 将所有顶层节点存入result中
+        List&lt;Evaluation&gt; result = new ArrayList&lt;&gt;();
+        // 遍历map得到顶层节点或者游离节点
+        for (int i = 0; i &lt; all.size(); i++) {
+            if (!treeMap.containsKey(all.get(i).getParentId())) {
+                result.add(all.get(i));
+            }
+        }
+
+        // 遍历数据，将对象放入父级节点的childList属性中
+        for (int i = 0; i &lt; all.size() &amp;&amp; !all.isEmpty(); i++) {
+            Evaluation Evaluation = treeMap.get(all.get(i).getParentId());
+            if (Evaluation != null) {
+                // 有父节点，校验父节点下childList是否存在，然后将子节点放入
+                if (Evaluation.getChildList() == null) {
+                    Evaluation.setChildList(new ArrayList&lt;&gt;());
+                }
+                // 添加到父节点的ChildList集合下
+                Evaluation.getChildList().add(all.get(i));
+            }
+        }
+        return result;
+    }
+}
+</code></pre><p>如果项目中使用的不多的话，这样就可以了。实现方式可以有很多种，用上边的方式的好处在于免去了多次到数据库查询的操作，而且可以灵活封装多层级数据，二层、三层、五层等等都可以。</p>
+<h1 id="封装工具类">封装工具类</h1>
+<p>为了实现代码的复用，我们可以将上方代码封装成工具类。</p>
+<h3 id="datatree接口">DataTree接口：</h3>
+<p>写这个接口类主要是为了下面的工具类，定义泛型T的类型</p>
+<pre><code>public interface DataTree&lt;T&gt; {
+
+    public String getId();
+
+    public String getParentId();
+
+    public void setChildList(List&lt;T&gt; childList);
+
+    public List&lt;T&gt; getChildList();
+}
+</code></pre><h3 id="工具类实现">工具类实现：</h3>
+<p>以下的泛型T就是接收数据的实体类，要继承上面数据接口类</p>
+<pre><code>public class TreeUtils {
+
+    //获取顶层节点
+    public static &lt;T extends DataTree&lt;T&gt;&gt; List&lt;T&gt; getTreeList(String topId, List&lt;T&gt; entityList) {
+        
+        List&lt;T&gt; resultList = new ArrayList&lt;&gt;();
+
+        Map&lt;Object, T&gt; treeMap = new HashMap&lt;&gt;();
+
+        T itemTree;
+
+        for (int i = 0; i &lt; entityList.size() &amp;&amp; !entityList.isEmpty(); i++) {
+            itemTree = entityList.get(i);
+            //把所有的数据放到treeMap中，id为key
+            treeMap.put(itemTree.getId(), itemTree);
+            //把顶层节点放到集合resultList中
+            if (topId.equals(itemTree.getParentId()) || itemTree.getParentId() == null) {
+                resultList.add(itemTree);
+            }
+        }
+
+        //循环数据，把数据放到上一级的childen属性中
+        for (int i = 0; i &lt; entityList.size() &amp;&amp; !entityList.isEmpty(); i++) {
+            itemTree = entityList.get(i);
+            T data = treeMap.get(itemTree.getParentId());
+            // 不等于null，也就意味着有父节点
+            if (data != null) {
+                if (data.getChildList() == null) {
+                    data.setChildList(new ArrayList&lt;&gt;());
+                }
+                //把子节点 放到父节点childList当中
+                data.getChildList().add(itemTree);
+                //把放好的数据放回map当中
+                treeMap.put(itemTree.getParentId(), data);
+            }
+        }
+        return resultList;
+    }
+}
+</code></pre><h3 id="使用方式">使用方式：</h3>
+<p>1、实体类：</p>
+<p>设计实体类，实现之前定义好的DataTree接口</p>
+<pre><code>@Data
+public class Evaluation implements DataTree&lt;Evaluation&gt; {
+
+    private String id;
+
+    private String label;
+
+    private String parentId;
+
+    private List&lt;Evaluation&gt; childList;
+}
+</code></pre><p>2、调用TreeUtils，传入数据和顶层节点id，即可获取到所需要的数据结构。</p>
+<pre><code>public class Test {
+    private EvaluationDao evaluationDao;
+
+    public List&lt;Evaluation&gt; getEvaluations() {
+
+        // 接收在数据库中查询到的数据
+        List&lt;Evaluation&gt; data = evaluationDao.findAll();
+
+        // 调用工具类，第一个参数是默认传入的顶级id，和查询出来的数据
+        return TreeUtils.getTreeList(&quot;0&quot;, data);
+    }
+}
+</code></pre>
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>原文作者：</strong><a rel="author" href="https://www.hanstrovsky.com">Hanstrovsky</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://www.hanstrovsky.com/post/5.%E5%A6%82%E4%BD%95%E5%9C%A8%E5%90%8E%E5%8F%B0%E5%B0%81%E8%A3%85el-tree%E6%89%80%E9%9C%80%E8%A6%81%E7%9A%84%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F/">https://www.hanstrovsky.com/post/5.%E5%A6%82%E4%BD%95%E5%9C%A8%E5%90%8E%E5%8F%B0%E5%B0%81%E8%A3%85el-tree%E6%89%80%E9%9C%80%E8%A6%81%E7%9A%84%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F/</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>See Also</h2>
+    <ul class="listing">
+        
+        <li><a href="/post/4.%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8Sping-Data-JPA%E6%9B%B4%E6%96%B0%E5%B1%80%E9%83%A8%E5%AD%97%E6%AE%B5/">如何使用Sping Data JPA更新局部字段</a></li>
+        
+        <li><a href="/post/3.%E7%AE%80%E5%8D%95%E8%AF%B4%E8%AF%B4%E5%9F%BA%E4%BA%8EJWT%E7%9A%84token%E8%AE%A4%E8%AF%81%E6%96%B9%E5%BC%8F/">简单说说基于JWT的token认证方式</a></li>
+        
+        <li><a href="/post/2.%E5%85%B3%E4%BA%8E%E8%BF%91%E6%9C%9F%E5%AD%A6%E4%B9%A0%E7%8A%B6%E6%80%81%E7%9A%84%E4%B8%80%E4%BA%9B%E5%8F%8D%E6%80%9D/">关于近期学习状态的一些反思</a></li>
+        
+        <li><a href="/about/">关于我</a></li>
+        
+        <li><a href="/2020/01/01/">为什么要使用构造方法进行依赖注入</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='https://www.hanstrovsky.com/tags/el-tree'>el-tree</a></li>
+                
+                <li><a href='https://www.hanstrovsky.com/tags/Java'>Java</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "yourdiscussshortname" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    
+    
+    <div class="post bg-white">
+      <script src="https://utteranc.es/client.js"
+            repo= "your github repo"
+            issue-term="pathname"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+      </script>
+    </div>
+    
+</div>
+
+        </div>
+
+        <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://www.hanstrovsky.com/search/' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://www.hanstrovsky.com">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+    
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://www.hanstrovsky.com/post/6.%E5%85%B3%E4%BA%8E%E9%85%8D%E7%BD%AENginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E5%90%8ESpringSecurity%E8%AE%A4%E8%AF%81%E5%A4%B1%E8%B4%A5%E7%9A%84%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/" title="关于配置Nginx反向代理后SpringSecurity认证失败的问题解决">关于配置Nginx反向代理后SpringSecurity认证失败的问题解决</a>
+    </li>
+    
+    <li>
+        <a href="https://www.hanstrovsky.com/post/5.%E5%A6%82%E4%BD%95%E5%9C%A8%E5%90%8E%E5%8F%B0%E5%B0%81%E8%A3%85el-tree%E6%89%80%E9%9C%80%E8%A6%81%E7%9A%84%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F/" title="如何在后台封装el-tree所需要的数据格式">如何在后台封装el-tree所需要的数据格式</a>
+    </li>
+    
+    <li>
+        <a href="https://www.hanstrovsky.com/post/4.%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8Sping-Data-JPA%E6%9B%B4%E6%96%B0%E5%B1%80%E9%83%A8%E5%AD%97%E6%AE%B5/" title="如何使用Sping Data JPA更新局部字段">如何使用Sping Data JPA更新局部字段</a>
+    </li>
+    
+    <li>
+        <a href="https://www.hanstrovsky.com/post/3.%E7%AE%80%E5%8D%95%E8%AF%B4%E8%AF%B4%E5%9F%BA%E4%BA%8EJWT%E7%9A%84token%E8%AE%A4%E8%AF%81%E6%96%B9%E5%BC%8F/" title="简单说说基于JWT的token认证方式">简单说说基于JWT的token认证方式</a>
+    </li>
+    
+    <li>
+        <a href="https://www.hanstrovsky.com/post/2.%E5%85%B3%E4%BA%8E%E8%BF%91%E6%9C%9F%E5%AD%A6%E4%B9%A0%E7%8A%B6%E6%80%81%E7%9A%84%E4%B8%80%E4%BA%9B%E5%8F%8D%E6%80%9D/" title="关于近期学习状态的一些反思">关于近期学习状态的一些反思</a>
+    </li>
+    
+    <li>
+        <a href="https://www.hanstrovsky.com/2020/01/01/" title="为什么要使用构造方法进行依赖注入">为什么要使用构造方法进行依赖注入</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">分类</h3>
+<ul class="widget-list">
+    
+    <li><a href="https://www.hanstrovsky.com/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/">技术文章 (6)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">标签</h3>
+<div class="tagcloud">
+    
+    <a href="https://www.hanstrovsky.com/tags/JPA/">JPA</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/Java/">Java</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/Jwt/">Jwt</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/el-tree/">el-tree</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/ioc/">ioc</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/nginx/">nginx</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/spring/">spring</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/springsecurity/">springsecurity</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/%E5%AD%A6%E4%B9%A0/">学习</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/%E5%B1%80%E9%83%A8%E6%9B%B4%E6%96%B0/">局部更新</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/%E7%94%9F%E6%B4%BB/">生活</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/%E8%AE%A4%E8%AF%81/">认证</a>
+    
+</div>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://www.hanstrovsky.com/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+      </div>
+    </div>
+  </div>
+</body>
+<footer id="footer">
+    <div class="container">
+        &copy; 2020 <a href="https://www.hanstrovsky.com">Hanstrovsky By Hanstrovsky</a>.
+        Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io" target="_blank">Hugo</a>.
+        <a href="https://www.flysnow.org/" target="_blank">Theme</a> based on <a href="https://github.com/flysnow-org/maupassant-hugo" target="_blank">maupassant</a>.
+        
+    </div>
+</footer>
+
+
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+    <script src='/js/douban.js'></script>
+
+
+</html>

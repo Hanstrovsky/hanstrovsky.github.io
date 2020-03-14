@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>局部更新 on Hanstrovsky</title>
+    <link>https://www.hanstrovsky.com/tags/%E5%B1%80%E9%83%A8%E6%9B%B4%E6%96%B0/</link>
+    <description>Recent content in 局部更新 on Hanstrovsky</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 20 Feb 2020 12:13:19 +0800</lastBuildDate>
+    
+	<atom:link href="https://www.hanstrovsky.com/tags/%E5%B1%80%E9%83%A8%E6%9B%B4%E6%96%B0/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>如何使用Sping Data JPA更新局部字段</title>
+      <link>https://www.hanstrovsky.com/post/4.%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8Sping-Data-JPA%E6%9B%B4%E6%96%B0%E5%B1%80%E9%83%A8%E5%AD%97%E6%AE%B5/</link>
+      <pubDate>Thu, 20 Feb 2020 12:13:19 +0800</pubDate>
+      
+      <guid>https://www.hanstrovsky.com/post/4.%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8Sping-Data-JPA%E6%9B%B4%E6%96%B0%E5%B1%80%E9%83%A8%E5%AD%97%E6%AE%B5/</guid>
+      <description>问题描述 在更新数据时，有时候我们只需要更新一部分字段，其他字段保持不变。Spring Data JPA并未提供现成的接口，直接使用save()更新会导致其他字段被Null覆盖掉。 解决办法 通常有两种方法解决此问题： 1、通过传入对象的id，从数据库中查询得到原始对象，然后将要修改的字段封装到原</description>
+    </item>
+    
+  </channel>
+</rss>

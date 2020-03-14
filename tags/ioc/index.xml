@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>ioc on Hanstrovsky</title>
+    <link>https://www.hanstrovsky.com/tags/ioc/</link>
+    <description>Recent content in ioc on Hanstrovsky</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Wed, 01 Jan 2020 00:00:00 +0800</lastBuildDate>
+    
+	<atom:link href="https://www.hanstrovsky.com/tags/ioc/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>为什么要使用构造方法进行依赖注入</title>
+      <link>https://www.hanstrovsky.com/2020/01/01/</link>
+      <pubDate>Wed, 01 Jan 2020 00:00:00 +0800</pubDate>
+      
+      <guid>https://www.hanstrovsky.com/2020/01/01/</guid>
+      <description>一、前言 我们在使用Spring框架进行开发时，不可避免的要进行依赖注入（Dependency Injection），也就是把实例从Spring容器中取出来进行使用。Spring的依赖注入方式主要有三种，分别为Constructor、Setter和Field。有了选择的余地，令人纠结</description>
+    </item>
+    
+  </channel>
+</rss>

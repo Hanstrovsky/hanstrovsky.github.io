@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>el-tree on Hanstrovsky</title>
+    <link>https://www.hanstrovsky.com/tags/el-tree/</link>
+    <description>Recent content in el-tree on Hanstrovsky</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Sun, 01 Mar 2020 12:13:19 +0800</lastBuildDate>
+    
+	<atom:link href="https://www.hanstrovsky.com/tags/el-tree/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>如何在后台封装el-tree所需要的数据格式</title>
+      <link>https://www.hanstrovsky.com/post/5.%E5%A6%82%E4%BD%95%E5%9C%A8%E5%90%8E%E5%8F%B0%E5%B0%81%E8%A3%85el-tree%E6%89%80%E9%9C%80%E8%A6%81%E7%9A%84%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F/</link>
+      <pubDate>Sun, 01 Mar 2020 12:13:19 +0800</pubDate>
+      
+      <guid>https://www.hanstrovsky.com/post/5.%E5%A6%82%E4%BD%95%E5%9C%A8%E5%90%8E%E5%8F%B0%E5%B0%81%E8%A3%85el-tree%E6%89%80%E9%9C%80%E8%A6%81%E7%9A%84%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F/</guid>
+      <description>背景 最近遇到了一个分层级展示指标的需求，前端使用el-tree树形组件，要求按官方文档的格式提供数据。 数据格式： id: 1, label: &#39;一级 1&#39;, children: id: 4, label: &#39;二级 1-1&#39;, children: id: 9, label: &#39;三级 1-1-1&#39;， children: ... 封装思路 1、首先我们需要获取到所有的节点，新建一个集合result来保存所有顶级节点，也就是parentI</description>
+    </item>
+    
+  </channel>
+</rss>
