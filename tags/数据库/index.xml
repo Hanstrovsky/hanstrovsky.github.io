@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>数据库 on Hanstrovsky</title>
+    <link>https://www.hanstrovsky.com/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/</link>
+    <description>Recent content in 数据库 on Hanstrovsky</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 27 Feb 2020 12:13:19 +0800</lastBuildDate>
+    
+	<atom:link href="https://www.hanstrovsky.com/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>关于数据库设计的三范式与反三范式 </title>
+      <link>https://www.hanstrovsky.com/2020/02/27/</link>
+      <pubDate>Thu, 27 Feb 2020 12:13:19 +0800</pubDate>
+      
+      <guid>https://www.hanstrovsky.com/2020/02/27/</guid>
+      <description>范式（数据库设计范式，数据库的设计范式）是符合某一种级别的关系模式的集合。构造数据库必须遵循一定的规则。在关系数据库中，这种规则就是范式。关系数据库中的关系必须满足一定的要求，即满足不同的范式。 一、第一范式 一个字段只记录一件事 在任何一个关系数据库中，第一范式（1NF）是对关系模式</description>
+    </item>
+    
+  </channel>
+</rss>

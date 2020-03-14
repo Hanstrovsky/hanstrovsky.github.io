@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>注解 on Hanstrovsky</title>
+    <link>https://www.hanstrovsky.com/tags/%E6%B3%A8%E8%A7%A3/</link>
+    <description>Recent content in 注解 on Hanstrovsky</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Sun, 01 Mar 2020 12:13:19 +0800</lastBuildDate>
+    
+	<atom:link href="https://www.hanstrovsky.com/tags/%E6%B3%A8%E8%A7%A3/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>关于JAVA中源码级注解的编写及使用 </title>
+      <link>https://www.hanstrovsky.com/2020/03/01/</link>
+      <pubDate>Sun, 01 Mar 2020 12:13:19 +0800</pubDate>
+      
+      <guid>https://www.hanstrovsky.com/2020/03/01/</guid>
+      <description>一、注解简介： 1.1.什么是“注解”： ​ 在我们编写代码时，一定看到过这样的代码： 1 2 3 4 5 6 7 8 class Student { private String name; @Override public String toString(String str) {//编译错误！ return &amp;#34;Student name = &amp;#34; + name; } } ​ 其中的@Override，就是一个“注解”，@Override一般出现在重写equals()或者toString()方法的上边</description>
+    </item>
+    
+  </channel>
+</rss>

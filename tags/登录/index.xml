@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>登录 on Hanstrovsky</title>
+    <link>https://www.hanstrovsky.com/tags/%E7%99%BB%E5%BD%95/</link>
+    <description>Recent content in 登录 on Hanstrovsky</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Tue, 18 Feb 2020 12:13:19 +0800</lastBuildDate>
+    
+	<atom:link href="https://www.hanstrovsky.com/tags/%E7%99%BB%E5%BD%95/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>如何使用Spring Securiry实现前后端分离项目的登录功能</title>
+      <link>https://www.hanstrovsky.com/2020/02/18/</link>
+      <pubDate>Tue, 18 Feb 2020 12:13:19 +0800</pubDate>
+      
+      <guid>https://www.hanstrovsky.com/2020/02/18/</guid>
+      <description>如果不是前后端分离项目，使用SpringSecurity做登录功能会很省心，只要简单的几项配置，便可以轻松完成登录成功失败的处理，当访问需要认证的页面时，可以自动重定向到登录页面。但是前后端分离的项目就不一样了，不能直接由后台处理，而是要向前端返回相应的json提示。 在本例的介绍</description>
+    </item>
+    
+  </channel>
+</rss>
