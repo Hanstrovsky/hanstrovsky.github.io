@@ -6,17 +6,17 @@
     <description>Recent content in Jwt on Hanstrovsky</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Sat, 01 Feb 2020 00:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 15 Jan 2020 21:00:00 +0800</lastBuildDate>
     
 	<atom:link href="https://www.hanstrovsky.com/tags/Jwt/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>简单说说基于JWT的token认证方式</title>
-      <link>https://www.hanstrovsky.com/2020/01/18/</link>
-      <pubDate>Sat, 01 Feb 2020 00:00:00 +0800</pubDate>
+      <link>https://www.hanstrovsky.com/2020/01/15/001.html</link>
+      <pubDate>Wed, 15 Jan 2020 21:00:00 +0800</pubDate>
       
-      <guid>https://www.hanstrovsky.com/2020/01/18/</guid>
+      <guid>https://www.hanstrovsky.com/2020/01/15/001.html</guid>
       <description>一、什么是认证 好多人不知道什么是认证，认证，其实就是服务端确认用户身份。Http协议是无状态的，客户端发送一条请求，服务端返回一条响应，二者就算做成一单买卖，一拍两散。在很久以前，互联网所能提供的服务仅仅是一些页面的浏览，服务器并不需要知道是谁在访问自己，而随着互联网的发展，在很</description>
     </item>
     

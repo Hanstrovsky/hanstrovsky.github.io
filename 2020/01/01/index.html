@@ -10,12 +10,12 @@
     <meta property="og:title" content="为什么要使用构造方法进行依赖注入 - Hanstrovsky">
     <meta property="og:type" content="article">
         
-    <meta property="article:published_time" content='2020-01-01T00:00:00&#43;08:00'>
+    <meta property="article:published_time" content='2020-01-01T21:00:00&#43;08:00'>
         
         
-    <meta property="article:modified_time" content='2020-01-01T00:00:00&#43;08:00'>
+    <meta property="article:modified_time" content='2020-01-01T21:00:00&#43;08:00'>
         
-    <meta name="Keywords" content="Java,java,Hanstrovsky,it,博客,项目管理,软件架构,基金,ETF,漫画">
+    <meta name="Keywords" content="Java,Hanstrovsky,IT,软件架构,基金,ETF,漫画">
     <meta name="description" content="为什么要使用构造方法进行依赖注入">
         <meta name="author" content="Hanstrovsky">
         
@@ -54,7 +54,7 @@
                         Hanstrovsky
                     </a>
                 
-                <p class="description">专注于Java、Go语言(golang)、移动互联网、项目管理、软件架构</p>
+                <p class="description">专注三大领域：金融、科技、艺术！</p>
             </div>
             <div>
                 <nav id="nav-menu" class="clearfix">
@@ -145,23 +145,16 @@
     <div class="post-toc-content">
         <nav id="TableOfContents">
   <ul>
-    <li><a href="#field注入">Field注入</a>
+    <li><a href="#一前言">一、前言</a></li>
+    <li><a href="#二注入方式对比">二、注入方式对比</a>
       <ul>
-        <li><a href="#优点">优点</a></li>
-        <li><a href="#缺点">缺点</a></li>
+        <li><a href="#field注入">Field注入</a></li>
+        <li><a href="#setter注入">Setter注入</a></li>
+        <li><a href="#constructor注入">Constructor注入</a></li>
       </ul>
     </li>
-    <li><a href="#setter注入">Setter注入</a>
-      <ul>
-        <li><a href="#优点-1">优点</a></li>
-        <li><a href="#缺点-1">缺点</a></li>
-      </ul>
-    </li>
-    <li><a href="#constructor注入">Constructor注入</a>
-      <ul>
-        <li></li>
-      </ul>
-    </li>
+    <li><a href="#三选择哪种注入方式">三、选择哪种注入方式</a></li>
+    <li><a href="#四总结">四、总结</a></li>
   </ul>
 </nav>
     </div>
@@ -222,32 +215,32 @@
         </div>
         
         <div class="post-content">
-            <h1 id="一前言">一、前言</h1>
+            <h2 id="一前言">一、前言</h2>
 <p>我们在使用Spring框架进行开发时，不可避免的要进行依赖注入（Dependency Injection），也就是把实例从Spring容器中取出来进行使用。Spring的依赖注入方式主要有三种，分别为Constructor、Setter和Field。有了选择的余地，令人纠结的地方就来了，这三种方式哪个更好一些呢？</p>
-<h1 id="二注入方式对比">二、注入方式对比</h1>
+<h2 id="二注入方式对比">二、注入方式对比</h2>
 <p>接下来我们逐一看下这三种注入方式：</p>
-<h2 id="field注入">Field注入</h2>
+<h3 id="field注入">Field注入</h3>
 <pre><code>@Autowired
 private DependencyA dependencyA;
-</code></pre><h3 id="优点">优点</h3>
+</code></pre><p><strong>优点</strong></p>
 <ul>
 <li>注入简单，只需在字段上添加@Autowired或@Resource；</li>
 <li>减少大量冗余代码，美观；</li>
 <li>新增Field时不需要过多代码修改；</li>
 </ul>
-<h3 id="缺点">缺点</h3>
+<p><strong>缺点</strong></p>
 <ul>
 <li>很难测试，因为没有带参构造和set方法，难以在容器以外使用。</li>
 <li>依赖不能是final的</li>
 <li>容易出现循环依赖</li>
 </ul>
-<h2 id="setter注入">Setter注入</h2>
+<h3 id="setter注入">Setter注入</h3>
 <pre><code>private DependencyB dependencyB;
 @Autowired
 public void setDependencyB(DependencyB dependencyB) {
     this.dependencyB = dependencyB;
 }
-</code></pre><h3 id="优点-1">优点</h3>
+</code></pre><p><strong>优点</strong></p>
 <ul>
 <li>
 <p>对循环依赖免疫</p>
@@ -256,34 +249,34 @@ public void setDependencyB(DependencyB dependencyB) {
 <p>在对象的整个生命周期内，可以随时动态的改变依赖。</p>
 </li>
 </ul>
-<h3 id="缺点-1">缺点</h3>
+<p><strong>缺点</strong></p>
 <ul>
 <li>依赖不能是final的</li>
 </ul>
-<h2 id="constructor注入">Constructor注入</h2>
+<h3 id="constructor注入">Constructor注入</h3>
 <pre><code>private DependencyC dependencyC;
 @Autowired
 public DI(DependencyC dependencyC) {
     this.dependencyC = dependencyC;
 }
-</code></pre><h4 id="优点-2">优点</h4>
+</code></pre><p><strong>优点</strong></p>
 <ul>
 <li>依赖可以是final的</li>
 <li>高耦合类随着构造参数的增长很容易被识别出来</li>
 <li>不需要依赖@Autowired注解（当类中只有一个构造方法时，可以省略@Autowired）</li>
 </ul>
-<h4 id="缺点-2">缺点</h4>
+<p><strong>缺点</strong></p>
 <ul>
 <li>代码显得十分臃肿</li>
 </ul>
-<h1 id="三选择哪种注入方式">三、选择哪种注入方式</h1>
+<h2 id="三选择哪种注入方式">三、选择哪种注入方式</h2>
 <p>Spring官方目前推荐的是构造器注入。根据官方的说法，因为它使人们能够将应用程序组件实现为<strong>不可变对象</strong>，并确保所需的<strong>依赖项不为null</strong>。此外，注入构造函数的组件总是以<strong>完全初始化</strong>的状态返回到客户端（调用）代码。</p>
 <ul>
 <li>**不可变对象：**说的是可以是字段用final关键字修饰。</li>
 <li>**依赖不为null：**因为有了自定义的构造函数，所以程序不再提供默认的空参构造，类在实例化时必须传入所有需要的参数。</li>
 <li>**完全初始化的状态：**构造方法的作用就是初始化成员变量，在Java类加载实例化的过程中，构造方法是最后一步，所以返回来的组件都是初始化之后的状态。</li>
 </ul>
-<h1 id="四总结">四、总结</h1>
+<h2 id="四总结">四、总结</h2>
 <p>三种方式各有利弊，从靠谱程度来说，还是构造器注入更好一些，它能有效避免一些比如循环依赖、空指针等异常的发生。另外，Spring中Bean默认为单例的，有可能会出现线程安全问题，这个时候final就更有必要了。当然，其他两种方式也有其自己的发光点，我们可以按实际需要选择使用，或混合使用。</p>
 
         </div>
@@ -305,6 +298,10 @@ public DI(DependencyC dependencyC) {
 <div class="post-archive">
     <h2>See Also</h2>
     <ul class="listing">
+        
+        <li><a href="/about/">关于我</a></li>
+        
+        <li><a href="/post/11.%E4%BD%BF%E7%94%A8PageHelper%E6%8F%92%E4%BB%B6%E5%88%86%E9%A1%B5%E6%97%B6%E5%A6%82%E4%BD%95%E5%AF%B9%E5%AF%B9%E8%B1%A1%E8%BF%9B%E8%A1%8C%E8%BD%AC%E6%8D%A2%E4%BB%A5%E5%8F%8A%E6%B7%BB%E5%8A%A0%E5%B1%9E%E6%80%A7-2020-03-11/"></a></li>
         
         <li><a href="/archives/">归档</a></li>
         
@@ -381,35 +378,39 @@ public DI(DependencyC dependencyC) {
 <ul class="widget-list">
     
     <li>
-        <a href="https://www.hanstrovsky.com/2020/03/01/" title="关于JAVA中源码级注解的编写及使用 ">关于JAVA中源码级注解的编写及使用 </a>
+        <a href="https://www.hanstrovsky.com/2020/03/04/" title="在Java中使用Collections.sort 依据多个字段排序 ">在Java中使用Collections.sort 依据多个字段排序 </a>
     </li>
     
     <li>
-        <a href="https://www.hanstrovsky.com/2020/02/27/" title="关于数据库设计的三范式与反三范式 ">关于数据库设计的三范式与反三范式 </a>
+        <a href="https://www.hanstrovsky.com/2020/02/26/" title="关于JAVA中源码级注解的编写及使用 ">关于JAVA中源码级注解的编写及使用 </a>
     </li>
     
     <li>
-        <a href="https://www.hanstrovsky.com/2020/02/18/" title="如何使用Spring Securiry实现前后端分离项目的登录功能">如何使用Spring Securiry实现前后端分离项目的登录功能</a>
+        <a href="https://www.hanstrovsky.com/2020/02/19/" title="关于数据库设计的三范式与反三范式 ">关于数据库设计的三范式与反三范式 </a>
     </li>
     
     <li>
-        <a href="https://www.hanstrovsky.com/2020/02/09/" title="关于配置Nginx反向代理后SpringSecurity认证失败的问题解决">关于配置Nginx反向代理后SpringSecurity认证失败的问题解决</a>
+        <a href="https://www.hanstrovsky.com/2020/02/12/" title="如何使用Spring Securiry实现前后端分离项目的登录功能">如何使用Spring Securiry实现前后端分离项目的登录功能</a>
     </li>
     
     <li>
-        <a href="https://www.hanstrovsky.com/2020/02/01/" title="如何在后台封装el-tree所需要的数据格式">如何在后台封装el-tree所需要的数据格式</a>
+        <a href="https://www.hanstrovsky.com/2020/02/05/" title="关于配置Nginx反向代理后SpringSecurity认证失败的问题解决">关于配置Nginx反向代理后SpringSecurity认证失败的问题解决</a>
     </li>
     
     <li>
-        <a href="https://www.hanstrovsky.com/2020/01/18/" title="简单说说基于JWT的token认证方式">简单说说基于JWT的token认证方式</a>
+        <a href="https://www.hanstrovsky.com/2020/01/29/" title="如何在后台封装el-tree所需要的数据格式">如何在后台封装el-tree所需要的数据格式</a>
     </li>
     
     <li>
-        <a href="https://www.hanstrovsky.com/2020/01/27/" title="如何使用Sping Data JPA更新局部字段">如何使用Sping Data JPA更新局部字段</a>
+        <a href="https://www.hanstrovsky.com/2020/01/22/" title="如何使用Sping Data JPA更新局部字段">如何使用Sping Data JPA更新局部字段</a>
     </li>
     
     <li>
-        <a href="https://www.hanstrovsky.com/2020/01/09/" title="关于近期学习状态的一些反思">关于近期学习状态的一些反思</a>
+        <a href="https://www.hanstrovsky.com/2020/01/15/" title="简单说说基于JWT的token认证方式">简单说说基于JWT的token认证方式</a>
+    </li>
+    
+    <li>
+        <a href="https://www.hanstrovsky.com/2020/01/08/" title="关于近期学习状态的一些反思">关于近期学习状态的一些反思</a>
     </li>
     
     <li>
@@ -425,7 +426,7 @@ public DI(DependencyC dependencyC) {
         <h3 class="widget-title">分类</h3>
 <ul class="widget-list">
     
-    <li><a href="https://www.hanstrovsky.com/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/">技术文章 (9)</a></li>
+    <li><a href="https://www.hanstrovsky.com/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/">技术文章 (10)</a></li>
     
 </ul>
     </section>
@@ -433,6 +434,8 @@ public DI(DependencyC dependencyC) {
     <section class="widget">
         <h3 class="widget-title">标签</h3>
 <div class="tagcloud">
+    
+    <a href="https://www.hanstrovsky.com/tags/Collections.sort/">Collections.sort</a>
     
     <a href="https://www.hanstrovsky.com/tags/JPA/">JPA</a>
     
@@ -456,9 +459,13 @@ public DI(DependencyC dependencyC) {
     
     <a href="https://www.hanstrovsky.com/tags/%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/">依赖注入</a>
     
+    <a href="https://www.hanstrovsky.com/tags/%E5%A4%9A%E5%AD%97%E6%AE%B5%E6%8E%92%E5%BA%8F/">多字段排序</a>
+    
     <a href="https://www.hanstrovsky.com/tags/%E5%AD%A6%E4%B9%A0/">学习</a>
     
     <a href="https://www.hanstrovsky.com/tags/%E5%B1%80%E9%83%A8%E6%9B%B4%E6%96%B0/">局部更新</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/%E6%8E%92%E5%BA%8F/">排序</a>
     
     <a href="https://www.hanstrovsky.com/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
     
@@ -488,10 +495,7 @@ public DI(DependencyC dependencyC) {
 </body>
 <footer id="footer">
     <div class="container">
-        &copy; 2020 <a href="https://www.hanstrovsky.com">Hanstrovsky By Hanstrovsky</a>.
-        Powered by <a rel="nofollow noreferer noopener" href="https://gohugo.io" target="_blank">Hugo</a>.
-        <a href="https://www.flysnow.org/" target="_blank">Theme</a> based on <a href="https://github.com/flysnow-org/maupassant-hugo" target="_blank">maupassant</a>.
-        
+      Copyright &copy; 2020 <a href="https://www.hanstrovsky.com">Hanstrovsky|Improving little by little everyday.</a>
     </div>
 </footer>
 

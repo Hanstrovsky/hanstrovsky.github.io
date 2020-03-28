@@ -6,17 +6,17 @@
     <description>Recent content in 局部更新 on Hanstrovsky</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Mon, 27 Jan 2020 12:13:19 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 22 Jan 2020 21:00:00 +0800</lastBuildDate>
     
 	<atom:link href="https://www.hanstrovsky.com/tags/%E5%B1%80%E9%83%A8%E6%9B%B4%E6%96%B0/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>如何使用Sping Data JPA更新局部字段</title>
-      <link>https://www.hanstrovsky.com/2020/01/27/</link>
-      <pubDate>Mon, 27 Jan 2020 12:13:19 +0800</pubDate>
+      <link>https://www.hanstrovsky.com/2020/01/22/001.html</link>
+      <pubDate>Wed, 22 Jan 2020 21:00:00 +0800</pubDate>
       
-      <guid>https://www.hanstrovsky.com/2020/01/27/</guid>
+      <guid>https://www.hanstrovsky.com/2020/01/22/001.html</guid>
       <description>问题描述 在更新数据时，有时候我们只需要更新一部分字段，其他字段保持不变。Spring Data JPA并未提供现成的接口，直接使用save()更新会导致其他字段被Null覆盖掉。 解决办法 通常有两种方法解决此问题： 1、通过传入对象的id，从数据库中查询得到原始对象，然后将要修改的字段封装到原</description>
     </item>
     

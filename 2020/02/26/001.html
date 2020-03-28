@@ -1,0 +1,816 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>关于JAVA中源码级注解的编写及使用  | Hanstrovsky</title>
+    <meta property="og:title" content="关于JAVA中源码级注解的编写及使用  - Hanstrovsky">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2020-02-26T21:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2020-02-26T21:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="Java,Hanstrovsky,IT,软件架构,基金,ETF,漫画">
+    <meta name="description" content="关于JAVA中源码级注解的编写及使用 ">
+        <meta name="author" content="Hanstrovsky">
+        
+    <meta property="og:url" content="https://www.hanstrovsky.com/2020/02/26/001.html">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-xxxxxxxxxxxxxx",
+        enable_page_level_ads: true
+    });
+    </script>
+    
+
+
+    
+    
+        <link rel="stylesheet" href='/css/douban.css'>
+    
+        <link rel="stylesheet" href='/css/other.css'>
+    
+</head>
+
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://www.hanstrovsky.com">
+                        Hanstrovsky
+                    </a>
+                
+                <p class="description">专注三大领域：金融、科技、艺术！</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://www.hanstrovsky.com">首页</a>
+                    
+                    <a  href="https://www.hanstrovsky.com/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://www.hanstrovsky.com/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<body>
+  <div id="body">
+    <div class="container">
+      <div class="col-group">
+
+        <div class="col-8" id="main">
+          
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">关于JAVA中源码级注解的编写及使用 </h1>
+        </header>
+        <date class="post-meta meta-date">
+            2020年2月26日
+        </date>
+        
+        <div class="post-meta">
+            <span>|</span>
+            
+            <span class="meta-category"><a href='https://www.hanstrovsky.com/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0'>技术文章</a></span>
+            
+        </div>
+        
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">|<span id="busuanzi_value_page_pv"></span><span>
+                    阅读</span></span>
+        </div>
+        
+        
+        <div class="post-content">
+            <h2 id="一注解简介">一、注解简介：</h2>
+<h3 id="11什么是注解">1.1.什么是“注解”：</h3>
+<p>​			在我们编写代码时，一定看到过这样的代码：</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#000;font-weight:bold">class</span> <span style="color:#458;font-weight:bold">Student</span> <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#000;font-weight:bold">private</span> String name<span style="color:#000;font-weight:bold">;</span>
+
+    <span style="color:#3c5d5d;font-weight:bold">@Override</span>
+    <span style="color:#000;font-weight:bold">public</span> String <span style="color:#900;font-weight:bold">toString</span><span style="color:#000;font-weight:bold">(</span>String str<span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span><span style="color:#998;font-style:italic">//编译错误！
+</span><span style="color:#998;font-style:italic"></span>        <span style="color:#000;font-weight:bold">return</span> <span style="color:#d14">&#34;Student name = &#34;</span> <span style="color:#000;font-weight:bold">+</span> name<span style="color:#000;font-weight:bold">;</span>
+    <span style="color:#000;font-weight:bold">}</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>​			其中的@Override，就是一个“注解”，@Override一般出现在重写equals()或者toString()方法的上边，意思是告诉编译器：下边的代码是重写父类方法的。这时编译器会按照“重写”的语法严格检查下面的方法，如果不符合重写语法，将会编译错误。</p>
+<p>​		&ldquo;注解&quot;作为一种“标记”，被写在源码中，不会改变程序的执行流程。它通常由“注解解析工具”来解析，而“注解解析器”可以随Java编译器启动，也可以独立启动，来解析注解，并以此可以做一些事情。</p>
+<h3 id="12注解的分类">1.2.注解的分类：</h3>
+<h4 id="源码注解">源码注解：</h4>
+<p>​		注解只在源码中，编译成class文件后就不存在了。</p>
+<h4 id="编译时注解">编译时注解：</h4>
+<p>​		注解在源码和.class文件中都存在（如：JDK内置系统注解）</p>
+<h4 id="运行时注解">运行时注解：</h4>
+<p>​		在运行阶段还起作用，甚至会影响运行逻辑的注解（如：JUnit的@Test）</p>
+<h3 id="13注解的作用">1.3.注解的作用</h3>
+<p>​		注解的作用非常广泛，注解可以被用在类、属性、构造方法、成员方法、局部变量等位置，用于对这些元素进行说明。由“注解解析工具”解析后，可以生成文档、进行代码分析、编译检查等。
+​		本例将会实现一个用作&quot;编译检查“的注解，以及一个&quot;注解解析器&rdquo;。&ldquo;注解解析器&quot;将会随着javac编译器一同启动来对使用了注解的类进行编译，并检查类名、字段名、方法名是否以大写、小写字符开头，如果违反了规则，编译时将会报错。</p>
+<h2 id="二自定义注解">二、自定义注解：</h2>
+<h3 id="21定义注解的基本语法">2.1.定义注解的基本语法</h3>
+<p>​			“注解”本质上是一个“类”，我们可以根据自己的需要定义自己的注解。
+​			定义注解的语法很简单：</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#000;font-weight:bold">public</span> <span style="color:#3c5d5d;font-weight:bold">@interface</span> CheckWord<span style="color:#000;font-weight:bold">{</span>
+	<span style="color:#000;font-weight:bold">.</span><span style="color:#000;font-weight:bold">.</span><span style="color:#000;font-weight:bold">.</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>​			&ldquo;注解”编译后会生成.class文件。但这是一个非常简单的注解，它可以被用在任何位置，而且编译器遇到这种注解也不做任何事情。例如：</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#3c5d5d;font-weight:bold">@CheckWord</span>
+<span style="color:#000;font-weight:bold">public</span> <span style="color:#000;font-weight:bold">class</span> <span style="color:#458;font-weight:bold">Student</span> <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#3c5d5d;font-weight:bold">@CheckWord</span>
+    <span style="color:#000;font-weight:bold">public</span> <span style="color:#900;font-weight:bold">Student</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#000;font-weight:bold">}</span>
+
+    <span style="color:#3c5d5d;font-weight:bold">@CheckWord</span>
+    <span style="color:#000;font-weight:bold">private</span> String name<span style="color:#000;font-weight:bold">;</span>
+
+    <span style="color:#3c5d5d;font-weight:bold">@CheckWord</span>
+    <span style="color:#000;font-weight:bold">public</span> <span style="color:#458;font-weight:bold">void</span> <span style="color:#900;font-weight:bold">study</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#000;font-weight:bold">}</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>下面我们先使用“元注解”来规定这个注解可以被用在哪里。</p>
+<h3 id="22元注解">2.2.元注解</h3>
+<p>​			“元注解”也是一种“注解”，它是已经实现好的。必须用在“注解”的定义上，它可以规定注解可以用在哪里，以及可以存在于源码中，或者class中，或者运行时。
+​			<strong>常用的“元注解”有两个：</strong>
+​			1).@Target : 规定注解可以用在哪里。常用的取值被定义在枚举java.lang.annotation.ElementType中：
+​					ElementType.TYPE：类和接口上
+​					ElementType.FIELD： 用在成员变量上
+​					ElementType.METHOD： 用在方法上
+​					ElementType.PARAMETER： 用在参数上
+​					ElementType.CONSTRUCTOR： 用在构造方法上
+​					ElementType.LOCAL_VARIABLE： 用在局部变量上
+​			2).@Retention : 规定注解可以存在于哪里。常用的取值被定义在枚举java.lang.annotation.RetentionPolicy中：
+​					RetentionPolicy.SOURCE： 规定注解只存在于Java源代码中， 编译生成的字节码文件中就不存在了。
+​					RetentionPolicy.CLASS： 规定注解存在于Java源代码、 编译以后的字节码文件中， 但JVM运行时，不会被加载到内存。
+​					RetentionPolicy.RUNTIME： 规定注解存在于Java源代码中、 编译以后的字节码文件中、 运行时内存中， 程序可以通过反射获取该注解。
+​			例如：修改我们的注解，规定它只能用在&quot;类&rdquo;,&ldquo;字段&rdquo;，“方法”上，并且可以存在于“源码中”：</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#000;font-weight:bold">import</span> <span style="color:#555">java.lang.annotation.ElementType</span><span style="color:#000;font-weight:bold">;</span>
+<span style="color:#000;font-weight:bold">import</span> <span style="color:#555">java.lang.annotation.Retention</span><span style="color:#000;font-weight:bold">;</span>
+<span style="color:#000;font-weight:bold">import</span> <span style="color:#555">java.lang.annotation.RetentionPolicy</span><span style="color:#000;font-weight:bold">;</span>
+<span style="color:#000;font-weight:bold">import</span> <span style="color:#555">java.lang.annotation.Target</span><span style="color:#000;font-weight:bold">;</span>
+
+<span style="color:#3c5d5d;font-weight:bold">@Target</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000;font-weight:bold">{</span>ElementType<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">TYPE</span><span style="color:#000;font-weight:bold">,</span> ElementType<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">FIELD</span><span style="color:#000;font-weight:bold">,</span> ElementType<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">METHOD</span><span style="color:#000;font-weight:bold">}</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#3c5d5d;font-weight:bold">@Retention</span><span style="color:#000;font-weight:bold">(</span>RetentionPolicy<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">SOURCE</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#000;font-weight:bold">public</span> <span style="color:#3c5d5d;font-weight:bold">@interface</span> CheckWord <span style="color:#000;font-weight:bold">{</span>
+
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>​		如果再编译之前的Student类，会发现用在&quot;构造方法&quot;上的@CheckWord会编译错误，因为我们规定了它只能用在&quot;类&rdquo;,&ldquo;字段&rdquo;,&ldquo;方法&quot;上。</p>
+<h3 id="23定义注解的属性">2.3.定义注解的属性：</h3>
+<p>​		<strong>1.“注解”中可以定义一些属性，“注解解析器”可以根据“属性”的不同，分别做不同的事情。</strong></p>
+<p>​		例如@Target注解中的ElementType.TYPE就是此注解的一个属性，它是一个&quot;枚举&quot;类型。
+​			  下面让我们来看看怎样定义属性，然后再解析这些属性。
+​		      注解中定义属性的语法：数据类型 属性名() [deafult 值];
+​				1.其中“数据类型”可以是：
+​						1).所有基本类型;
+​						2).String;
+​						3).Class;
+​						4).枚举;
+​						5).注解；
+​						6).以上任一类型的数组
+​				2.属性名()：属性名可以自由设定，要遵循Java标识符的命名规则；其中的一对()是必须的。
+​				3.[default 值]：为此属性设置的默认值。
+​		<strong>2.本例中由于只检查大小写，为了规范取值，所以定义一个&quot;枚举&quot;类型的属性。</strong>
+​			  1).先定义枚举：</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#000;font-weight:bold">public</span> <span style="color:#000;font-weight:bold">enum</span> StartsWith <span style="color:#000;font-weight:bold">{</span>
+    UPPERCASE<span style="color:#000;font-weight:bold">,</span> LOWERCASE
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>​					此枚举定义了两个值：UPPERCASE表示：大写；LOWERCASE表示：小写。
+​			  2).修改&quot;CheckWord&quot;注解的代码：</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#3c5d5d;font-weight:bold">@Target</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000;font-weight:bold">{</span>ElementType<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">TYPE</span><span style="color:#000;font-weight:bold">,</span> ElementType<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">FIELD</span><span style="color:#000;font-weight:bold">,</span> ElementType<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">METHOD</span><span style="color:#000;font-weight:bold">}</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#3c5d5d;font-weight:bold">@Retention</span><span style="color:#000;font-weight:bold">(</span>RetentionPolicy<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">SOURCE</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#000;font-weight:bold">public</span> <span style="color:#3c5d5d;font-weight:bold">@interface</span> CheckWord <span style="color:#000;font-weight:bold">{</span>
+    StartsWith <span style="color:#900;font-weight:bold">value</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">;</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>​					说明：
+​							a.StartsWith表示&quot;数据类型&rdquo;，是一个&quot;枚举&quot;类型。
+​							b.value表示&quot;属性名&rdquo;，在使用此注解时，此属性的可取值只有StartsWith.UPPERCASE和StartsWith.LOWERCASE两个。
+​							c.此属性没有设置&quot;默认值&rdquo;，在使用此注解时必须要设置此属性的值。如下面的代码：
+​			  3).修改&quot;Student&quot;类的代码：</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">8
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#3c5d5d;font-weight:bold">@CheckWord</span><span style="color:#000;font-weight:bold">(</span>StartsWith<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">UPPERCASE</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#000;font-weight:bold">public</span> <span style="color:#000;font-weight:bold">class</span> <span style="color:#458;font-weight:bold">Student</span> <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#3c5d5d;font-weight:bold">@CheckWord</span><span style="color:#000;font-weight:bold">(</span>StartsWith<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">LOWERCASE</span><span style="color:#000;font-weight:bold">)</span>
+    <span style="color:#000;font-weight:bold">private</span> String stuName<span style="color:#000;font-weight:bold">;</span>
+    <span style="color:#3c5d5d;font-weight:bold">@CheckWord</span><span style="color:#000;font-weight:bold">(</span>StartsWith<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">LOWERCASE</span><span style="color:#000;font-weight:bold">)</span>
+    <span style="color:#000;font-weight:bold">public</span> <span style="color:#458;font-weight:bold">void</span> <span style="color:#900;font-weight:bold">show</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#000;font-weight:bold">}</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="24注解解析器">2.4注解解析器：</h3>
+<p>​		1.&ldquo;注解解析器&quot;通常是随着注解一起定义的，用于解析&quot;注解&rdquo;，并做一些事情。本例的&quot;注解解析器&quot;用于与javac编译器一起启动，编译Student类时，检查各元素的名称是否按要求以指定的大写、小写字母开头。
+​		2.自定义&quot;注解解析器&quot;需要继承AbstractProcessor类，并重写process()方法，完整的&quot;注解解析器&quot;代码如下：</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">40
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">41
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">42
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">43
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">44
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#000;font-weight:bold">import</span> <span style="color:#555">javax.annotation.processing.AbstractProcessor</span><span style="color:#000;font-weight:bold">;</span>
+<span style="color:#000;font-weight:bold">import</span> <span style="color:#555">javax.annotation.processing.RoundEnvironment</span><span style="color:#000;font-weight:bold">;</span>
+<span style="color:#000;font-weight:bold">import</span> <span style="color:#555">javax.annotation.processing.SupportedAnnotationTypes</span><span style="color:#000;font-weight:bold">;</span>
+<span style="color:#000;font-weight:bold">import</span> <span style="color:#555">javax.annotation.processing.SupportedSourceVersion</span><span style="color:#000;font-weight:bold">;</span>
+<span style="color:#000;font-weight:bold">import</span> <span style="color:#555">javax.lang.model.SourceVersion</span><span style="color:#000;font-weight:bold">;</span>
+<span style="color:#000;font-weight:bold">import</span> <span style="color:#555">javax.lang.model.element.Element</span><span style="color:#000;font-weight:bold">;</span>
+<span style="color:#000;font-weight:bold">import</span> <span style="color:#555">javax.lang.model.element.TypeElement</span><span style="color:#000;font-weight:bold">;</span>
+<span style="color:#000;font-weight:bold">import</span> <span style="color:#555">javax.tools.Diagnostic</span><span style="color:#000;font-weight:bold">;</span>
+<span style="color:#000;font-weight:bold">import</span> <span style="color:#555">java.util.Set</span><span style="color:#000;font-weight:bold">;</span>
+
+<span style="color:#3c5d5d;font-weight:bold">@SupportedAnnotationTypes</span><span style="color:#000;font-weight:bold">(</span><span style="color:#d14">&#34;CheckWord&#34;</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#3c5d5d;font-weight:bold">@SupportedSourceVersion</span><span style="color:#000;font-weight:bold">(</span>SourceVersion<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">RELEASE_8</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#000;font-weight:bold">public</span> <span style="color:#000;font-weight:bold">class</span> <span style="color:#458;font-weight:bold">MyProcessor</span> <span style="color:#000;font-weight:bold">extends</span> AbstractProcessor <span style="color:#000;font-weight:bold">{</span>
+
+    <span style="color:#3c5d5d;font-weight:bold">@Override</span>
+    <span style="color:#000;font-weight:bold">public</span> <span style="color:#458;font-weight:bold">boolean</span> <span style="color:#900;font-weight:bold">process</span><span style="color:#000;font-weight:bold">(</span>Set<span style="color:#000;font-weight:bold">&lt;</span><span style="color:#000;font-weight:bold">?</span> <span style="color:#000;font-weight:bold">extends</span> TypeElement<span style="color:#000;font-weight:bold">&gt;</span> annotations<span style="color:#000;font-weight:bold">,</span> RoundEnvironment roundEnv<span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+        <span style="color:#998;font-style:italic">//获取所有使用了@CheckWord注解的元素
+</span><span style="color:#998;font-style:italic"></span>        Set<span style="color:#000;font-weight:bold">&lt;</span><span style="color:#000;font-weight:bold">?</span> <span style="color:#000;font-weight:bold">extends</span> Element<span style="color:#000;font-weight:bold">&gt;</span> annoEle <span style="color:#000;font-weight:bold">=</span> roundEnv<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">getElementsAnnotatedWith</span><span style="color:#000;font-weight:bold">(</span>CheckWord<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">class</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">;</span>
+        <span style="color:#998;font-style:italic">// 遍历这些元素
+</span><span style="color:#998;font-style:italic"></span>        <span style="color:#000;font-weight:bold">for</span> <span style="color:#000;font-weight:bold">(</span>Element e <span style="color:#000;font-weight:bold">:</span> annoEle<span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+            <span style="color:#998;font-style:italic">//获取元素名称，可能是：类名、属性名、方法名
+</span><span style="color:#998;font-style:italic"></span>            String name <span style="color:#000;font-weight:bold">=</span> e<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">getSimpleName</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">.</span><span style="color:#008080">toString</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">;</span>
+            <span style="color:#998;font-style:italic">//获取这个名字的第一个字母
+</span><span style="color:#998;font-style:italic"></span>            <span style="color:#458;font-weight:bold">char</span> c <span style="color:#000;font-weight:bold">=</span> name<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">charAt</span><span style="color:#000;font-weight:bold">(</span>0<span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">;</span>
+            <span style="color:#998;font-style:italic">//获取这个元素上的@CheckWord注解对象
+</span><span style="color:#998;font-style:italic"></span>            CheckWord anno <span style="color:#000;font-weight:bold">=</span> e<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">getAnnotation</span><span style="color:#000;font-weight:bold">(</span>CheckWord<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">class</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">;</span>
+            <span style="color:#998;font-style:italic">//获取这个注解的value属性的值，它是一个StartsWith枚举类型
+</span><span style="color:#998;font-style:italic"></span>            StartsWith sw <span style="color:#000;font-weight:bold">=</span> anno<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">value</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">;</span>
+            <span style="color:#998;font-style:italic">//判断属性值是否设置为：StartsWith.UPPERCASE，但名字的首字母是小写
+</span><span style="color:#998;font-style:italic"></span>            <span style="color:#000;font-weight:bold">if</span> <span style="color:#000;font-weight:bold">(</span>sw <span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">=</span> StartsWith<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">UPPERCASE</span> <span style="color:#000;font-weight:bold">&amp;</span><span style="color:#000;font-weight:bold">&amp;</span> Character<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">isLowerCase</span><span style="color:#000;font-weight:bold">(</span>c<span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+                <span style="color:#998;font-style:italic">//向控制台打印异常信息
+</span><span style="color:#998;font-style:italic"></span>                <span style="color:#000;font-weight:bold">this</span><span style="color:#000;font-weight:bold">.</span><span style="color:#008080">processingEnv</span><span style="color:#000;font-weight:bold">.</span><span style="color:#008080">getMessager</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">.</span><span style="color:#008080">printMessage</span><span style="color:#000;font-weight:bold">(</span>Diagnostic<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">Kind</span><span style="color:#000;font-weight:bold">.</span><span style="color:#008080">ERROR</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#d14">&#34;名称：&#34;</span> <span style="color:#000;font-weight:bold">+</span> name <span style="color:#000;font-weight:bold">+</span> <span style="color:#d14">&#34; 首字母应该大写！&#34;</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">;</span>
+                <span style="color:#000;font-weight:bold">return</span> <span style="color:#000;font-weight:bold">false</span><span style="color:#000;font-weight:bold">;</span>
+            <span style="color:#000;font-weight:bold">}</span>
+            <span style="color:#998;font-style:italic">//判断属性值是否设置为：StartsWith.LOWERCASE，但名字的首字母是大写
+</span><span style="color:#998;font-style:italic"></span>            <span style="color:#000;font-weight:bold">if</span> <span style="color:#000;font-weight:bold">(</span>sw <span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">=</span> StartsWith<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">LOWERCASE</span> <span style="color:#000;font-weight:bold">&amp;</span><span style="color:#000;font-weight:bold">&amp;</span> Character<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">isUpperCase</span><span style="color:#000;font-weight:bold">(</span>c<span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+                <span style="color:#000;font-weight:bold">this</span><span style="color:#000;font-weight:bold">.</span><span style="color:#008080">processingEnv</span><span style="color:#000;font-weight:bold">.</span><span style="color:#008080">getMessager</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">.</span><span style="color:#008080">printMessage</span><span style="color:#000;font-weight:bold">(</span>Diagnostic<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">Kind</span><span style="color:#000;font-weight:bold">.</span><span style="color:#008080">ERROR</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#d14">&#34;名称：&#34;</span> <span style="color:#000;font-weight:bold">+</span> name <span style="color:#000;font-weight:bold">+</span> <span style="color:#d14">&#34; 首字母应该小写！&#34;</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">;</span>
+                <span style="color:#000;font-weight:bold">return</span> <span style="color:#000;font-weight:bold">false</span><span style="color:#000;font-weight:bold">;</span>
+            <span style="color:#000;font-weight:bold">}</span>
+
+        <span style="color:#000;font-weight:bold">}</span>
+        <span style="color:#000;font-weight:bold">return</span> <span style="color:#000;font-weight:bold">true</span><span style="color:#000;font-weight:bold">;</span>
+    <span style="color:#000;font-weight:bold">}</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>​				此代码的细节大家可以根据注释一点一点研究。一些类：TypeElement，RoundEnvironment，Element等的一些方法大家可以在API手册中查找。
+​			其它说明：
+​		   @SupportedAnnotationTypes(&ldquo;CheckWord&rdquo;) : 表示只处理CheckWord注解。
+​                   @SupportedSourceVersion(SourceVersion.RELEASE_8) ： 表示支持JDK1.8。</p>
+<h3 id="25编译和测试">2.5.编译和测试：</h3>
+<p>​	<strong>1.在编译前，我们看一下完整的代码清单：请确保以下的四个类在同一个目录下</strong>
+​			1).枚举类：</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#000;font-weight:bold">public</span> <span style="color:#000;font-weight:bold">enum</span> StartsWith <span style="color:#000;font-weight:bold">{</span>
+    UPPERCASE<span style="color:#000;font-weight:bold">,</span> LOWERCASE
+<span style="color:#000;font-weight:bold">}</span>			
+</code></pre></td></tr></table>
+</div>
+</div><p>​			2).自定义注解类：</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#000;font-weight:bold">import</span> <span style="color:#555">java.lang.annotation.ElementType</span><span style="color:#000;font-weight:bold">;</span>
+<span style="color:#000;font-weight:bold">import</span> <span style="color:#555">java.lang.annotation.Retention</span><span style="color:#000;font-weight:bold">;</span>
+<span style="color:#000;font-weight:bold">import</span> <span style="color:#555">java.lang.annotation.RetentionPolicy</span><span style="color:#000;font-weight:bold">;</span>
+<span style="color:#000;font-weight:bold">import</span> <span style="color:#555">java.lang.annotation.Target</span><span style="color:#000;font-weight:bold">;</span>
+
+<span style="color:#3c5d5d;font-weight:bold">@Target</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000;font-weight:bold">{</span>ElementType<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">TYPE</span><span style="color:#000;font-weight:bold">,</span> ElementType<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">FIELD</span><span style="color:#000;font-weight:bold">,</span> ElementType<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">METHOD</span><span style="color:#000;font-weight:bold">}</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#3c5d5d;font-weight:bold">@Retention</span><span style="color:#000;font-weight:bold">(</span>RetentionPolicy<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">SOURCE</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#000;font-weight:bold">public</span> <span style="color:#3c5d5d;font-weight:bold">@interface</span> CheckWord <span style="color:#000;font-weight:bold">{</span>
+    StartsWith <span style="color:#900;font-weight:bold">value</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">;</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>​			3).使用了CheckWord注解的Student类：</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#3c5d5d;font-weight:bold">@CheckWord</span><span style="color:#000;font-weight:bold">(</span>StartsWith<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">UPPERCASE</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#000;font-weight:bold">public</span> <span style="color:#000;font-weight:bold">class</span> <span style="color:#458;font-weight:bold">Student</span> <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#3c5d5d;font-weight:bold">@CheckWord</span><span style="color:#000;font-weight:bold">(</span>StartsWith<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">LOWERCASE</span><span style="color:#000;font-weight:bold">)</span>
+    <span style="color:#000;font-weight:bold">private</span> String StuName<span style="color:#000;font-weight:bold">;</span>
+
+    <span style="color:#3c5d5d;font-weight:bold">@CheckWord</span><span style="color:#000;font-weight:bold">(</span>StartsWith<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">LOWERCASE</span><span style="color:#000;font-weight:bold">)</span>
+    <span style="color:#000;font-weight:bold">public</span> <span style="color:#458;font-weight:bold">void</span> <span style="color:#900;font-weight:bold">show</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+
+    <span style="color:#000;font-weight:bold">}</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>​			4).注解解析器类：
+​</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">32
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">33
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">34
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">35
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">36
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">37
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">38
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">39
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#000;font-weight:bold">import</span> <span style="color:#555">javax.annotation.processing.AbstractProcessor</span><span style="color:#000;font-weight:bold">;</span>
+<span style="color:#000;font-weight:bold">import</span> <span style="color:#555">javax.annotation.processing.RoundEnvironment</span><span style="color:#000;font-weight:bold">;</span>
+<span style="color:#000;font-weight:bold">import</span> <span style="color:#555">javax.annotation.processing.SupportedAnnotationTypes</span><span style="color:#000;font-weight:bold">;</span>
+<span style="color:#000;font-weight:bold">import</span> <span style="color:#555">javax.annotation.processing.SupportedSourceVersion</span><span style="color:#000;font-weight:bold">;</span>
+<span style="color:#000;font-weight:bold">import</span> <span style="color:#555">javax.lang.model.SourceVersion</span><span style="color:#000;font-weight:bold">;</span>
+<span style="color:#000;font-weight:bold">import</span> <span style="color:#555">javax.lang.model.element.Element</span><span style="color:#000;font-weight:bold">;</span>
+<span style="color:#000;font-weight:bold">import</span> <span style="color:#555">javax.lang.model.element.ElementKind</span><span style="color:#000;font-weight:bold">;</span>
+<span style="color:#000;font-weight:bold">import</span> <span style="color:#555">javax.lang.model.element.TypeElement</span><span style="color:#000;font-weight:bold">;</span>
+<span style="color:#000;font-weight:bold">import</span> <span style="color:#555">javax.tools.Diagnostic</span><span style="color:#000;font-weight:bold">;</span>
+<span style="color:#000;font-weight:bold">import</span> <span style="color:#555">java.util.Set</span><span style="color:#000;font-weight:bold">;</span>
+
+<span style="color:#3c5d5d;font-weight:bold">@SupportedAnnotationTypes</span><span style="color:#000;font-weight:bold">(</span><span style="color:#d14">&#34;CheckWord&#34;</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#3c5d5d;font-weight:bold">@SupportedSourceVersion</span><span style="color:#000;font-weight:bold">(</span>SourceVersion<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">RELEASE_8</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#000;font-weight:bold">public</span> <span style="color:#000;font-weight:bold">class</span> <span style="color:#458;font-weight:bold">MyProcessor</span> <span style="color:#000;font-weight:bold">extends</span> AbstractProcessor <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#3c5d5d;font-weight:bold">@Override</span>
+    <span style="color:#000;font-weight:bold">public</span> <span style="color:#458;font-weight:bold">boolean</span> <span style="color:#900;font-weight:bold">process</span><span style="color:#000;font-weight:bold">(</span>Set<span style="color:#000;font-weight:bold">&lt;</span><span style="color:#000;font-weight:bold">?</span> <span style="color:#000;font-weight:bold">extends</span> TypeElement<span style="color:#000;font-weight:bold">&gt;</span> annotations<span style="color:#000;font-weight:bold">,</span> RoundEnvironment roundEnv<span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+        Set<span style="color:#000;font-weight:bold">&lt;</span><span style="color:#000;font-weight:bold">?</span> <span style="color:#000;font-weight:bold">extends</span> Element<span style="color:#000;font-weight:bold">&gt;</span> annoEle <span style="color:#000;font-weight:bold">=</span> roundEnv<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">getElementsAnnotatedWith</span><span style="color:#000;font-weight:bold">(</span>CheckWord<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">class</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">;</span>
+        <span style="color:#000;font-weight:bold">for</span> <span style="color:#000;font-weight:bold">(</span>Element e <span style="color:#000;font-weight:bold">:</span> annoEle<span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+            String name <span style="color:#000;font-weight:bold">=</span> e<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">getSimpleName</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">.</span><span style="color:#008080">toString</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">;</span>
+            <span style="color:#458;font-weight:bold">char</span> c <span style="color:#000;font-weight:bold">=</span> name<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">charAt</span><span style="color:#000;font-weight:bold">(</span>0<span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">;</span>
+
+            CheckWord anno <span style="color:#000;font-weight:bold">=</span> e<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">getAnnotation</span><span style="color:#000;font-weight:bold">(</span>CheckWord<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">class</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">;</span>
+            StartsWith sw <span style="color:#000;font-weight:bold">=</span> anno<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">value</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">;</span>
+            <span style="color:#000;font-weight:bold">if</span> <span style="color:#000;font-weight:bold">(</span>sw <span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">=</span> StartsWith<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">UPPERCASE</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+                <span style="color:#000;font-weight:bold">if</span> <span style="color:#000;font-weight:bold">(</span>Character<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">isLowerCase</span><span style="color:#000;font-weight:bold">(</span>c<span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+                    <span style="color:#000;font-weight:bold">this</span><span style="color:#000;font-weight:bold">.</span><span style="color:#008080">processingEnv</span><span style="color:#000;font-weight:bold">.</span><span style="color:#008080">getMessager</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">.</span><span style="color:#008080">printMessage</span><span style="color:#000;font-weight:bold">(</span>Diagnostic<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">Kind</span><span style="color:#000;font-weight:bold">.</span><span style="color:#008080">ERROR</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#d14">&#34;名称：&#34;</span> <span style="color:#000;font-weight:bold">+</span> name <span style="color:#000;font-weight:bold">+</span> <span style="color:#d14">&#34; 首字母应该大写！&#34;</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">;</span>
+                    <span style="color:#000;font-weight:bold">return</span> <span style="color:#000;font-weight:bold">false</span><span style="color:#000;font-weight:bold">;</span>
+                <span style="color:#000;font-weight:bold">}</span>
+            <span style="color:#000;font-weight:bold">}</span>
+            <span style="color:#000;font-weight:bold">if</span> <span style="color:#000;font-weight:bold">(</span>sw <span style="color:#000;font-weight:bold">=</span><span style="color:#000;font-weight:bold">=</span> StartsWith<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">LOWERCASE</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+                <span style="color:#000;font-weight:bold">if</span> <span style="color:#000;font-weight:bold">(</span>Character<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">isUpperCase</span><span style="color:#000;font-weight:bold">(</span>c<span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+                    <span style="color:#000;font-weight:bold">this</span><span style="color:#000;font-weight:bold">.</span><span style="color:#008080">processingEnv</span><span style="color:#000;font-weight:bold">.</span><span style="color:#008080">getMessager</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">.</span><span style="color:#008080">printMessage</span><span style="color:#000;font-weight:bold">(</span>Diagnostic<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">Kind</span><span style="color:#000;font-weight:bold">.</span><span style="color:#008080">ERROR</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#d14">&#34;名称：&#34;</span> <span style="color:#000;font-weight:bold">+</span> name <span style="color:#000;font-weight:bold">+</span> <span style="color:#d14">&#34; 首字母应该小写！&#34;</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">;</span>
+                    <span style="color:#000;font-weight:bold">return</span> <span style="color:#000;font-weight:bold">false</span><span style="color:#000;font-weight:bold">;</span>
+                <span style="color:#000;font-weight:bold">}</span>
+            <span style="color:#000;font-weight:bold">}</span>
+        <span style="color:#000;font-weight:bold">}</span>
+        <span style="color:#000;font-weight:bold">return</span> <span style="color:#000;font-weight:bold">true</span><span style="color:#000;font-weight:bold">;</span>
+    <span style="color:#000;font-weight:bold">}</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>​	<strong>2.启动命令行，使用javac依次进行编译：</strong>
+​			javac StartsWith.java
+​			javac CheckWord.java
+​			javac MyProcessor.java（如果报错： 编码GBK的不可映射字符，是因为代码中的中文，可以使用javac -encoding UTF-8 MyProcessor.java进行编译）
+​			接下来使用MyProcessor解析器编译Student:
+​			javac -processor MyProcessor Student.java
+​		    执行命令后，会有错误提示：
+​				错误: 名称：StuName 首字母应该小写！
+​				1 个错误</p>
+<h2 id="三总结">三、总结：</h2>
+<p>​	源码级注解的应用非常广泛，例如：进行代码检查、生成新类、生成文件。本文实现了基本的代码检查，用于检查类中的元素是否按照要求进行首字母大写或者小写。也可以根据需要，验证是否全部大写，或者全部小写。希望大家通过本案例能够了解源码级注解的编写及使用。</p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>原文作者：</strong><a rel="author" href="https://www.hanstrovsky.com">Hanstrovsky</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://www.hanstrovsky.com/2020/02/26/001.html">https://www.hanstrovsky.com/2020/02/26/001.html</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>See Also</h2>
+    <ul class="listing">
+        
+        <li><a href="/2020/02/19/001.html">关于数据库设计的三范式与反三范式 </a></li>
+        
+        <li><a href="/2020/02/12/001.html">如何使用Spring Securiry实现前后端分离项目的登录功能</a></li>
+        
+        <li><a href="/2020/02/05/001.html">关于配置Nginx反向代理后SpringSecurity认证失败的问题解决</a></li>
+        
+        <li><a href="/2020/01/29/001.html">如何在后台封装el-tree所需要的数据格式</a></li>
+        
+        <li><a href="/2020/01/22/001.html">如何使用Sping Data JPA更新局部字段</a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='https://www.hanstrovsky.com/tags/%E6%B3%A8%E8%A7%A3'>注解</a></li>
+                
+                <li><a href='https://www.hanstrovsky.com/tags/Java%E6%B3%A8%E8%A7%A3'>Java注解</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "yourdiscussshortname" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    
+    
+</div>
+
+        </div>
+
+        <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://www.hanstrovsky.com/search/' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://www.hanstrovsky.com">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+    
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://www.hanstrovsky.com/2020/03/11/001.html" title="使用PageHelper插件分页时，如何对对象进行转换以及添加属性">使用PageHelper插件分页时，如何对对象进行转换以及添加属性</a>
+    </li>
+    
+    <li>
+        <a href="https://www.hanstrovsky.com/2020/03/04/001.html" title="在Java中使用Collections.sort 依据多个字段排序 ">在Java中使用Collections.sort 依据多个字段排序 </a>
+    </li>
+    
+    <li>
+        <a href="https://www.hanstrovsky.com/2020/02/26/001.html" title="关于JAVA中源码级注解的编写及使用 ">关于JAVA中源码级注解的编写及使用 </a>
+    </li>
+    
+    <li>
+        <a href="https://www.hanstrovsky.com/2020/02/19/001.html" title="关于数据库设计的三范式与反三范式 ">关于数据库设计的三范式与反三范式 </a>
+    </li>
+    
+    <li>
+        <a href="https://www.hanstrovsky.com/2020/02/12/001.html" title="如何使用Spring Securiry实现前后端分离项目的登录功能">如何使用Spring Securiry实现前后端分离项目的登录功能</a>
+    </li>
+    
+    <li>
+        <a href="https://www.hanstrovsky.com/2020/02/05/001.html" title="关于配置Nginx反向代理后SpringSecurity认证失败的问题解决">关于配置Nginx反向代理后SpringSecurity认证失败的问题解决</a>
+    </li>
+    
+    <li>
+        <a href="https://www.hanstrovsky.com/2020/01/29/001.html" title="如何在后台封装el-tree所需要的数据格式">如何在后台封装el-tree所需要的数据格式</a>
+    </li>
+    
+    <li>
+        <a href="https://www.hanstrovsky.com/2020/01/22/001.html" title="如何使用Sping Data JPA更新局部字段">如何使用Sping Data JPA更新局部字段</a>
+    </li>
+    
+    <li>
+        <a href="https://www.hanstrovsky.com/2020/01/15/001.html" title="简单说说基于JWT的token认证方式">简单说说基于JWT的token认证方式</a>
+    </li>
+    
+    <li>
+        <a href="https://www.hanstrovsky.com/2020/01/08/001.html" title="关于近期学习状态的一些反思">关于近期学习状态的一些反思</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">分类</h3>
+<ul class="widget-list">
+    
+    <li><a href="https://www.hanstrovsky.com/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/">技术文章 (11)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">标签</h3>
+<div class="tagcloud">
+    
+    <a href="https://www.hanstrovsky.com/tags/Collections.sort/">Collections.sort</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/JPA/">JPA</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/Java/">Java</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/Java%E6%B3%A8%E8%A7%A3/">Java注解</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/Jwt/">Jwt</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/PageHelper/">PageHelper</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/el-tree/">el-tree</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/ioc/">ioc</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/nginx/">nginx</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/spring/">spring</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/springsecurity/">springsecurity</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/%E4%B8%89%E8%8C%83%E5%BC%8F/">三范式</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/">依赖注入</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/%E5%88%86%E9%A1%B5/">分页</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/%E5%A4%9A%E5%AD%97%E6%AE%B5%E6%8E%92%E5%BA%8F/">多字段排序</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/%E5%AD%A6%E4%B9%A0/">学习</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/%E5%B1%80%E9%83%A8%E6%9B%B4%E6%96%B0/">局部更新</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/%E6%8E%92%E5%BA%8F/">排序</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/%E6%B3%A8%E8%A7%A3/">注解</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/%E7%94%9F%E6%B4%BB/">生活</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/%E7%99%BB%E5%BD%95/">登录</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/%E8%AE%A4%E8%AF%81/">认证</a>
+    
+</div>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://www.hanstrovsky.com/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+      </div>
+    </div>
+  </div>
+</body>
+<footer id="footer">
+    <div class="container">
+      Copyright &copy; 2020 <a href="https://www.hanstrovsky.com">Hanstrovsky | Improving little by little everyday.</a>
+    </div>
+</footer>
+
+
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+    <script src='/js/douban.js'></script>
+
+
+</html>

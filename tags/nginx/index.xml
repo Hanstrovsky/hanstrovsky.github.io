@@ -6,17 +6,17 @@
     <description>Recent content in nginx on Hanstrovsky</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Sun, 09 Feb 2020 12:13:19 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 05 Feb 2020 21:00:00 +0800</lastBuildDate>
     
 	<atom:link href="https://www.hanstrovsky.com/tags/nginx/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>关于配置Nginx反向代理后SpringSecurity认证失败的问题解决</title>
-      <link>https://www.hanstrovsky.com/2020/02/09/</link>
-      <pubDate>Sun, 09 Feb 2020 12:13:19 +0800</pubDate>
+      <link>https://www.hanstrovsky.com/2020/02/05/001.html</link>
+      <pubDate>Wed, 05 Feb 2020 21:00:00 +0800</pubDate>
       
-      <guid>https://www.hanstrovsky.com/2020/02/09/</guid>
+      <guid>https://www.hanstrovsky.com/2020/02/05/001.html</guid>
       <description>问题背景 最近在写的一个项目，采用前后端分离的方式进行开发，登录认证使用的是SpringSecurity框架。 问题描述 在项目部署的时候出现了一个问题，在自己电脑上运行的时候一切顺畅，可是部署到服务器上就一直登录失败，分别测试了前端和后端的代码，独立运行没有问题，打开F12查看返回的</description>
     </item>
     
