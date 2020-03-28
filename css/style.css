@@ -2,7 +2,7 @@
  * 
  * @package Maupassant
  * @author cho
- * @version 1.3
+ * @version 1.4
  * @link http://pickcho.com
  */
  @font-face {
@@ -149,6 +149,7 @@ input[type="text"], input[type="email"], input[type="url"], input[type="password
     -moz-box-sizing:border-box;
     box-sizing:border-box;
     outline:none;
+    border-radius: 10px;
 }
 button, input, optgroup, select, textarea {
     font-family: inherit;
@@ -235,6 +236,7 @@ textarea {
     overflow: hidden;
 }
 #search input {
+    border-radius: 10px;
     padding: 1em 2em .75em 1em;
     line-height: 1.5;
 }
