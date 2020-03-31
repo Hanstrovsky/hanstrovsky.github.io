@@ -6,10 +6,19 @@
     <description>Recent content on Hanstrovsky</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 11 Mar 2020 21:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 29 Mar 2020 21:00:00 +0800</lastBuildDate>
     
 	<atom:link href="https://www.hanstrovsky.com/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>如何在Linux服务器上部署jar包</title>
+      <link>https://www.hanstrovsky.com/2020/03/29/001.html</link>
+      <pubDate>Sun, 29 Mar 2020 21:00:00 +0800</pubDate>
+      
+      <guid>https://www.hanstrovsky.com/2020/03/29/001.html</guid>
+      <description>启动程序方法 1、上传jar包到linux服务器下 2、启动jar包 ​ 前台模式 java –jar XXXX.jar（注意这个命令启动时，断开服务连接后，服务就关闭了） ​ 后台模式 nohup java -jar XXXX.jar &amp;gt;XX.log 2&amp;gt;&amp;amp;1&amp;amp;（xx.log代表日志输出文件） 终止程序方法 1、查看运行中的java程序 ​ ps</description>
+    </item>
     
     <item>
       <title>使用PageHelper插件分页时，如何对对象进行转换以及添加属性</title>
