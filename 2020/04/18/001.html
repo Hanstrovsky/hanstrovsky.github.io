@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>如何使用swagger生成漂亮的接口文档 | Hanstrovsky</title>
+    <meta property="og:title" content="如何使用swagger生成漂亮的接口文档 - Hanstrovsky">
+    <meta property="og:type" content="article">
+        
+    <meta property="article:published_time" content='2020-04-18T21:00:00&#43;08:00'>
+        
+        
+    <meta property="article:modified_time" content='2020-04-18T21:00:00&#43;08:00'>
+        
+    <meta name="Keywords" content="Java,Hanstrovsky,IT,软件架构,基金,ETF,漫画">
+    <meta name="description" content="如何使用swagger生成漂亮的接口文档">
+        <meta name="author" content="Hanstrovsky">
+        
+    <meta property="og:url" content="https://www.hanstrovsky.com/2020/04/18/001.html">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href='/css/normalize.css'>
+    <link rel="stylesheet" href='/css/style.css'>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-xxxxxxxxxxxxxx",
+        enable_page_level_ads: true
+    });
+    </script>
+    
+
+
+    
+    
+        <link rel="stylesheet" href='/css/douban.css'>
+    
+        <link rel="stylesheet" href='/css/other.css'>
+    
+</head>
+
+<header id="header" class="clearfix">
+    <div class="container">
+        <div class="col-group">
+            <div class="site-name ">
+                
+                    <a id="logo" href="https://www.hanstrovsky.com">
+                        Hanstrovsky
+                    </a>
+                
+                <p class="description">专注三大领域：金融、科技、艺术！</p>
+            </div>
+            <div>
+                <nav id="nav-menu" class="clearfix">
+                    <a class="current" href="https://www.hanstrovsky.com">首页</a>
+                    
+                    <a  href="https://www.hanstrovsky.com/archives/" title="归档">归档</a>
+                    
+                    <a  href="https://www.hanstrovsky.com/about/" title="关于">关于</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<body>
+  <div id="body">
+    <div class="container">
+      <div class="col-group">
+
+        <div class="col-8" id="main">
+          
+<div class="res-cons">
+    
+    <article class="post">
+        <header>
+            <h1 class="post-title">如何使用swagger生成漂亮的接口文档</h1>
+        </header>
+        <date class="post-meta meta-date">
+            2020年4月18日
+        </date>
+        
+        <div class="post-meta">
+            <span>|</span>
+            
+            <span class="meta-category"><a href='https://www.hanstrovsky.com/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0'>技术文章</a></span>
+            
+        </div>
+        
+        
+        <div class="post-meta">
+            <span id="busuanzi_container_page_pv">|<span id="busuanzi_value_page_pv"></span><span>
+                    阅读</span></span>
+        </div>
+        
+        
+        <div class="post-content">
+            <h2 id="一简单介绍">一、简单介绍</h2>
+<p>Swagger是一个实现了OpenAPI(OpenAPI Specification)规范的工具集。OpenAPI是Linux基金会的一个项目，试图通过定义一种用来描述API格式或API定义的语言，来规范RESTful服务开发过程。</p>
+<p>swagger大大方便了前后端开发人员，用过的人都说好。但是也有一些人并未体验过swagger，还在苦苦的手写接口文档，麻烦又不规范；还有一些人虽然用过，但是只是朦朦胧胧，看别人怎么用直接就CV过来用了，使用的很碎片，不系统。我之前就是这个样子，只知道添加个依赖，启动项目后访问：localhost:8080/swagger-ui.html，就能看到生成的文档了，很是简单。</p>
+<p>一次我看到生成的文档上总是多出来一个basic-error-controller，强迫症犯了，就想要把它弄掉，于是顺便看了下swagger的配置，在这里记录一下。</p>
+<p>官网：https://swagger.io/</p>
+<p>看官方的说明：</p>
+<p>Swagger包含的工具集：</p>
+<ul>
+<li><strong>Swagger编辑器：</strong> Swagger Editor允许您在浏览器中编辑YAML中的OpenAPI规范并实时预览文档。</li>
+<li><strong>Swagger UI：</strong> Swagger UI是HTML，Javascript和CSS资产的集合，可以从符合OAS标准的API动态生成漂亮的文档。</li>
+<li>**Swagger Codegen：**允许根据OpenAPI规范自动生成API客户端库（SDK生成），服务器存根和文档。</li>
+<li>**Swagger Parser：**用于解析来自Java的OpenAPI定义的独立库</li>
+<li>**Swagger Core：**与Java相关的库，用于创建，使用和使用OpenAPI定义</li>
+<li><strong>Swagger Inspector（免费）：</strong> API测试工具，可让您验证您的API并从现有API生成OpenAPI定义</li>
+<li><strong>SwaggerHub（免费和商业）：</strong> API设计和文档，为使用OpenAPI的团队构建。</li>
+</ul>
+<h2 id="二入门案例">二、入门案例</h2>
+<p>SpringBoot已经集成了Swagger，使用简单注解即可生成swagger的API文档。</p>
+<h3 id="1引入依赖">1.引入依赖</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#000080">&lt;dependency</span><span style="color:#000080">&gt;</span>
+ <span style="color:#000080">&lt;groupId</span><span style="color:#000080">&gt;</span>io.springfox<span style="color:#000080">&lt;/groupId&gt;</span>
+ <span style="color:#000080">&lt;artifactId</span><span style="color:#000080">&gt;</span>springfox-swagger2<span style="color:#000080">&lt;/artifactId&gt;</span>
+ <span style="color:#000080">&lt;version</span><span style="color:#000080">&gt;</span>2.9.2<span style="color:#000080">&lt;/version&gt;</span>
+<span style="color:#000080">&lt;/dependency&gt;</span>
+<span style="color:#000080">&lt;dependency</span><span style="color:#000080">&gt;</span>
+ <span style="color:#000080">&lt;groupId</span><span style="color:#000080">&gt;</span>io.springfox<span style="color:#000080">&lt;/groupId&gt;</span>
+ <span style="color:#000080">&lt;artifactId</span><span style="color:#000080">&gt;</span>springfox-swagger-ui<span style="color:#000080">&lt;/artifactId&gt;</span>
+ <span style="color:#000080">&lt;version</span><span style="color:#000080">&gt;</span>2.9.2<span style="color:#000080">&lt;/version&gt;</span>
+<span style="color:#000080">&lt;/dependency&gt;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="2编写配置">2.编写配置</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">14
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">15
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">16
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">17
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">18
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">19
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">20
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">21
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">22
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">23
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">24
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">25
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">26
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">27
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">28
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">29
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">30
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">31
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#3c5d5d;font-weight:bold">@Configuration</span>
+<span style="color:#3c5d5d;font-weight:bold">@EnableSwagger2</span> <span style="color:#998;font-style:italic">// Swagger的开关，表示已经启用Swagger
+</span><span style="color:#998;font-style:italic"></span><span style="color:#000;font-weight:bold">public</span> <span style="color:#000;font-weight:bold">class</span> <span style="color:#458;font-weight:bold">SwaggerConfig</span> <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#3c5d5d;font-weight:bold">@Bean</span>
+    <span style="color:#000;font-weight:bold">public</span> Docket <span style="color:#900;font-weight:bold">api</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+        Docket docket <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">new</span> Docket<span style="color:#000;font-weight:bold">(</span>DocumentationType<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">SWAGGER_2</span><span style="color:#000;font-weight:bold">)</span>
+                <span style="color:#000;font-weight:bold">.</span><span style="color:#008080">host</span><span style="color:#000;font-weight:bold">(</span><span style="color:#d14">&#34;localhost:8081&#34;</span><span style="color:#000;font-weight:bold">)</span><span style="color:#998;font-style:italic">// 不配的话，默认当前项目端口
+</span><span style="color:#998;font-style:italic"></span>                <span style="color:#000;font-weight:bold">.</span><span style="color:#008080">apiInfo</span><span style="color:#000;font-weight:bold">(</span>apiInfo<span style="color:#000;font-weight:bold">(</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">)</span>
+                <span style="color:#000;font-weight:bold">.</span><span style="color:#008080">pathMapping</span><span style="color:#000;font-weight:bold">(</span><span style="color:#d14">&#34;/&#34;</span><span style="color:#000;font-weight:bold">)</span>
+                <span style="color:#000;font-weight:bold">.</span><span style="color:#008080">select</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#998;font-style:italic">// 选择哪些路径和api会生成document
+</span><span style="color:#998;font-style:italic"></span>                <span style="color:#000;font-weight:bold">.</span><span style="color:#008080">apis</span><span style="color:#000;font-weight:bold">(</span>RequestHandlerSelectors<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">any</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">)</span><span style="color:#998;font-style:italic">// 对所有api进行监控
+</span><span style="color:#998;font-style:italic"></span><span style="color:#998;font-style:italic">//                .apis(RequestHandlerSelectors.basePackage(&#34;com.hanstrovsky.controller&#34;))// 选择监控的package
+</span><span style="color:#998;font-style:italic"></span><span style="color:#998;font-style:italic">//                .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))// 只监控有ApiOperation注解的接口
+</span><span style="color:#998;font-style:italic"></span>                <span style="color:#998;font-style:italic">//不显示错误的接口地址
+</span><span style="color:#998;font-style:italic"></span>                <span style="color:#000;font-weight:bold">.</span><span style="color:#008080">paths</span><span style="color:#000;font-weight:bold">(</span>Predicates<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">not</span><span style="color:#000;font-weight:bold">(</span>PathSelectors<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">regex</span><span style="color:#000;font-weight:bold">(</span><span style="color:#d14">&#34;/error.*&#34;</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">)</span><span style="color:#998;font-style:italic">//错误路径不监控
+</span><span style="color:#998;font-style:italic"></span>                <span style="color:#000;font-weight:bold">.</span><span style="color:#008080">paths</span><span style="color:#000;font-weight:bold">(</span>PathSelectors<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">regex</span><span style="color:#000;font-weight:bold">(</span><span style="color:#d14">&#34;/.*&#34;</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">)</span><span style="color:#998;font-style:italic">// 对根下所有路径进行监控
+</span><span style="color:#998;font-style:italic"></span>                <span style="color:#000;font-weight:bold">.</span><span style="color:#008080">build</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">;</span>
+        <span style="color:#000;font-weight:bold">return</span> docket<span style="color:#000;font-weight:bold">;</span>
+    <span style="color:#000;font-weight:bold">}</span>
+
+    <span style="color:#000;font-weight:bold">private</span> ApiInfo <span style="color:#900;font-weight:bold">apiInfo</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+        <span style="color:#000;font-weight:bold">return</span> <span style="color:#000;font-weight:bold">new</span> ApiInfoBuilder<span style="color:#000;font-weight:bold">(</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">.</span><span style="color:#008080">title</span><span style="color:#000;font-weight:bold">(</span><span style="color:#d14">&#34;XXXX项目接口文档&#34;</span><span style="color:#000;font-weight:bold">)</span>
+                <span style="color:#000;font-weight:bold">.</span><span style="color:#008080">contact</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000;font-weight:bold">new</span> Contact<span style="color:#000;font-weight:bold">(</span><span style="color:#d14">&#34;Hanstrovsky&#34;</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#d14">&#34;www.hanstrovsky.com&#34;</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#d14">&#34;Hanstrovsky@gmail.com&#34;</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">)</span>
+                <span style="color:#000;font-weight:bold">.</span><span style="color:#008080">description</span><span style="color:#000;font-weight:bold">(</span><span style="color:#d14">&#34;这是用Swagger动态生成的接口文档&#34;</span><span style="color:#000;font-weight:bold">)</span>
+                <span style="color:#000;font-weight:bold">.</span><span style="color:#008080">termsOfServiceUrl</span><span style="color:#000;font-weight:bold">(</span><span style="color:#d14">&#34;NO terms of service&#34;</span><span style="color:#000;font-weight:bold">)</span>
+                <span style="color:#000;font-weight:bold">.</span><span style="color:#008080">license</span><span style="color:#000;font-weight:bold">(</span><span style="color:#d14">&#34;The Apache License, Version 2.0&#34;</span><span style="color:#000;font-weight:bold">)</span>
+                <span style="color:#000;font-weight:bold">.</span><span style="color:#008080">licenseUrl</span><span style="color:#000;font-weight:bold">(</span><span style="color:#d14">&#34;http://www.apache.org/licenses/LICENSE-2.0.html&#34;</span><span style="color:#000;font-weight:bold">)</span>
+                <span style="color:#000;font-weight:bold">.</span><span style="color:#008080">version</span><span style="color:#000;font-weight:bold">(</span><span style="color:#d14">&#34;1.0&#34;</span><span style="color:#000;font-weight:bold">)</span>
+                <span style="color:#000;font-weight:bold">.</span><span style="color:#008080">build</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">;</span>
+    <span style="color:#000;font-weight:bold">}</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="3启动测试">3.启动测试</h3>
+<p>启动服务，访问：http://localhost:8081/swagger-ui.html</p>
+<p>就能看到swagger-ui为我们提供的API页面了：</p>
+<p><img src="C:%5CUsers%5CHanstrovsky%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200418113334809.png" alt="image-20200418113334809"></p>
+<p>可以看到我们编写的接口，任意点击一个，即可看到接口的详细信息：</p>
+<p><img src="C:%5CUsers%5CHanstrovsky%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200418113213275.png" alt="image-20200418113213275"></p>
+<p>可以看到详细的接口声明，包括：</p>
+<ul>
+<li>请求方式：</li>
+<li>请求路径</li>
+<li>请求参数</li>
+<li>响应等信息</li>
+</ul>
+<p>点击右上角的<code>try it out!</code>还可以测试接口。</p>
+<h2 id="三常用注解">三、常用注解</h2>
+<p>刚才的文档说明中，是swagge-ui根据接口自动生成，不够详细。如果有需要，可以通过注解自定义接口声明。常用的注解包括：</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#998;font-style:italic">/**
+</span><span style="color:#998;font-style:italic"> @Api：修饰整个类，描述Controller的作用
+</span><span style="color:#998;font-style:italic"> @ApiOperation：描述一个类的一个方法，或者说一个接口
+</span><span style="color:#998;font-style:italic"> @ApiParam：单个参数描述
+</span><span style="color:#998;font-style:italic"> @ApiModel：用对象来接收参数
+</span><span style="color:#998;font-style:italic"> @ApiProperty：用对象接收参数时，描述对象的一个字段
+</span><span style="color:#998;font-style:italic"> @ApiResponse：HTTP响应其中1个描述
+</span><span style="color:#998;font-style:italic"> @ApiResponses：HTTP响应整体描述
+</span><span style="color:#998;font-style:italic"> @ApiIgnore：使用该注解忽略这个API
+</span><span style="color:#998;font-style:italic"> @ApiError ：发生错误返回的信息
+</span><span style="color:#998;font-style:italic"> @ApiImplicitParam：一个请求参数
+</span><span style="color:#998;font-style:italic"> @ApiImplicitParams：多个请求参数
+</span><span style="color:#998;font-style:italic"> */</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>示例：</p>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#3c5d5d;font-weight:bold">@PostMapping</span><span style="color:#000;font-weight:bold">(</span><span style="color:#d14">&#34;/people&#34;</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#3c5d5d;font-weight:bold">@ApiOperation</span><span style="color:#000;font-weight:bold">(</span>value <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;保存人员信息&#34;</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#3c5d5d;font-weight:bold">@ApiResponses</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000;font-weight:bold">{</span>
+       <span style="color:#3c5d5d;font-weight:bold">@ApiResponse</span><span style="color:#000;font-weight:bold">(</span>code <span style="color:#000;font-weight:bold">=</span> 0<span style="color:#000;font-weight:bold">,</span> message <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;保存成功&#34;</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">,</span>
+       <span style="color:#3c5d5d;font-weight:bold">@ApiResponse</span><span style="color:#000;font-weight:bold">(</span>code <span style="color:#000;font-weight:bold">=</span> 1<span style="color:#000;font-weight:bold">,</span> message <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;保存失败&#34;</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#000;font-weight:bold">}</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#000;font-weight:bold">public</span> FrontResult <span style="color:#900;font-weight:bold">save</span><span style="color:#000;font-weight:bold">(</span>
+         <span style="color:#3c5d5d;font-weight:bold">@ApiParam</span><span style="color:#000;font-weight:bold">(</span>value <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;保存参数&#34;</span><span style="color:#000;font-weight:bold">,</span> example <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;&#34;</span><span style="color:#000;font-weight:bold">)</span>
+         <span style="color:#3c5d5d;font-weight:bold">@RequestBody</span> People people<span style="color:#000;font-weight:bold">)</span> <span style="color:#000;font-weight:bold">{</span>
+     people<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">setBirthday</span><span style="color:#000;font-weight:bold">(</span>Timestamp<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">valueOf</span><span style="color:#000;font-weight:bold">(</span>LocalDateTime<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">now</span><span style="color:#000;font-weight:bold">(</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">;</span>
+     <span style="color:#000;font-weight:bold">return</span> <span style="color:#000;font-weight:bold">new</span> FrontResult<span style="color:#000;font-weight:bold">(</span>FrontResult<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">SUCCEED</span><span style="color:#000;font-weight:bold">,</span> <span style="color:#d14">&#34;保存成功&#34;</span><span style="color:#000;font-weight:bold">,</span> peopleDao<span style="color:#000;font-weight:bold">.</span><span style="color:#008080">save</span><span style="color:#000;font-weight:bold">(</span>people<span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">)</span><span style="color:#000;font-weight:bold">;</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 6
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 7
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 8
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 9
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">10
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">11
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">12
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">13
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#3c5d5d;font-weight:bold">@Data</span>
+<span style="color:#3c5d5d;font-weight:bold">@ApiModel</span><span style="color:#000;font-weight:bold">(</span>description <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;人员信息保存请求对象&#34;</span><span style="color:#000;font-weight:bold">)</span>
+<span style="color:#000;font-weight:bold">public</span> <span style="color:#000;font-weight:bold">class</span> <span style="color:#458;font-weight:bold">People</span> <span style="color:#000;font-weight:bold">{</span>
+    <span style="color:#3c5d5d;font-weight:bold">@ApiModelProperty</span><span style="color:#000;font-weight:bold">(</span>value <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;人员编号&#34;</span><span style="color:#000;font-weight:bold">)</span>
+    <span style="color:#000;font-weight:bold">private</span> Long id<span style="color:#000;font-weight:bold">;</span>
+    <span style="color:#3c5d5d;font-weight:bold">@ApiModelProperty</span><span style="color:#000;font-weight:bold">(</span>value <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;姓名&#34;</span><span style="color:#000;font-weight:bold">,</span> required <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">true</span><span style="color:#000;font-weight:bold">,</span>position <span style="color:#000;font-weight:bold">=</span> 1<span style="color:#000;font-weight:bold">)</span>
+    <span style="color:#000;font-weight:bold">private</span> String name<span style="color:#000;font-weight:bold">;</span>
+    <span style="color:#3c5d5d;font-weight:bold">@ApiModelProperty</span><span style="color:#000;font-weight:bold">(</span>value <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;性别&#34;</span><span style="color:#000;font-weight:bold">,</span> required <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">true</span><span style="color:#000;font-weight:bold">,</span>position <span style="color:#000;font-weight:bold">=</span> 2<span style="color:#000;font-weight:bold">)</span>
+    <span style="color:#000;font-weight:bold">private</span> String sex<span style="color:#000;font-weight:bold">;</span>
+    <span style="color:#3c5d5d;font-weight:bold">@ApiModelProperty</span><span style="color:#000;font-weight:bold">(</span>value <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;生日&#34;</span><span style="color:#000;font-weight:bold">,</span> required <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">true</span><span style="color:#000;font-weight:bold">,</span>position <span style="color:#000;font-weight:bold">=</span> 3<span style="color:#000;font-weight:bold">)</span>
+    <span style="color:#3c5d5d;font-weight:bold">@JsonFormat</span><span style="color:#000;font-weight:bold">(</span>pattern <span style="color:#000;font-weight:bold">=</span> <span style="color:#d14">&#34;yyyy-MM-dd HH:mm:ss&#34;</span><span style="color:#000;font-weight:bold">)</span>
+    <span style="color:#000;font-weight:bold">private</span> Timestamp birthday<span style="color:#000;font-weight:bold">;</span>
+<span style="color:#000;font-weight:bold">}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>查看文档：</p>
+<p><img src="C:%5CUsers%5CHanstrovsky%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200418120950776.png" alt="image-20200418120950776"></p>
+<h2 id="四美化一下">四、美化一下</h2>
+<p>如果觉得用起来不太习惯，可以用Swagger-Bootstrap-UI 替换Swagger 默认的UI实现左右菜单风格的Swagger-UI ，让其看起来更清晰明了。</p>
+<h3 id="1添加依赖">1.添加依赖</h3>
+<div class="highlight"><div style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4">
+<table style="border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block;"><tr><td style="vertical-align:top;padding:0;margin:0;border:0;">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">1
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">2
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">3
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">4
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">5
+</span><span style="margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">6
+</span></code></pre></td>
+<td style="vertical-align:top;padding:0;margin:0;border:0;;width:100%">
+<pre style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#998;font-style:italic">&lt;!--</span><span style="color:#998;font-style:italic"> https://mvnrepository.com/artifact/com.github.xiaoymin/swagger</span><span style="color:#998;font-style:italic">-</span><span style="color:#998;font-style:italic">bootstrap</span><span style="color:#998;font-style:italic">-</span><span style="color:#998;font-style:italic">ui </span><span style="color:#998;font-style:italic">--&gt;</span>
+        <span style="color:#000080">&lt;dependency</span><span style="color:#000080">&gt;</span>
+            <span style="color:#000080">&lt;groupId</span><span style="color:#000080">&gt;</span>com.github.xiaoymin<span style="color:#000080">&lt;/groupId&gt;</span>
+            <span style="color:#000080">&lt;artifactId</span><span style="color:#000080">&gt;</span>swagger-bootstrap-ui<span style="color:#000080">&lt;/artifactId&gt;</span>
+            <span style="color:#000080">&lt;version</span><span style="color:#000080">&gt;</span>1.9.6<span style="color:#000080">&lt;/version&gt;</span>
+        <span style="color:#000080">&lt;/dependency&gt;</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id="2重启项目">2.重启项目</h3>
+<p>访问 http://localhost:8080/doc.html ：</p>
+<p><img src="C:%5CUsers%5CHanstrovsky%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200418121341486.png" alt="image-20200418121341486"></p>
+
+        </div>
+
+        
+<div class="post-archive">
+    <ul class="post-copyright">
+        <li><strong>原文作者：</strong><a rel="author" href="https://www.hanstrovsky.com">Hanstrovsky</a></li>
+        <li style="word-break:break-all"><strong>原文链接：</strong><a href="https://www.hanstrovsky.com/2020/04/18/001.html">https://www.hanstrovsky.com/2020/04/18/001.html</a></li>
+        <li><strong>版权声明：</strong>本作品采用<a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a>进行许可，非商业转载请注明出处（作者，原文链接），商业转载请联系作者获得授权。</li>
+    </ul>
+</div>
+<br/>
+
+
+
+        
+
+<div class="post-archive">
+    <h2>See Also</h2>
+    <ul class="listing">
+        
+        <li><a href="/2020/04/28/001.html">伤其十指，不如断其一指，谈谈我的学习计划</a></li>
+        
+        <li><a href="/2020/03/29/001.html">如何在Linux服务器上部署jar包</a></li>
+        
+        <li><a href="/2020/03/11/001.html">使用PageHelper插件分页时，如何对对象进行转换以及添加属性</a></li>
+        
+        <li><a href="/2020/03/04/001.html">在Java中使用Collections.sort 依据多个字段排序 </a></li>
+        
+        <li><a href="/2020/02/26/001.html">关于JAVA中源码级注解的编写及使用 </a></li>
+        
+    </ul>
+</div>
+
+
+        <div class="post-meta meta-tags">
+            
+            <ul class="clearfix">
+                
+                <li><a href='https://www.hanstrovsky.com/tags/swagger'>swagger</a></li>
+                
+                <li><a href='https://www.hanstrovsky.com/tags/%E6%8E%A5%E5%8F%A3%E6%96%87%E6%A1%A3'>接口文档</a></li>
+                
+            </ul>
+            
+        </div>
+    </article>
+    
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "yourdiscussshortname" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    
+    
+</div>
+
+        </div>
+
+        <div id="secondary">
+    <section class="widget">
+        <form id="search" action='https://www.hanstrovsky.com/search/' method="get" accept-charset="utf-8" target="_blank" _lpchecked="1">
+      
+      <input type="text" name="q" maxlength="20" placeholder="Search">
+      <input type="hidden" name="sitesearch" value="https://www.hanstrovsky.com">
+      <button type="submit" class="submit icon-search"></button>
+</form>
+    </section>
+
+    <section class="widget">
+      <h3 class="widget-title">分类</h3>
+<ul class="widget-list">
+    
+    <li><a href="https://www.hanstrovsky.com/categories/%E6%8A%80%E6%9C%AF%E6%96%87%E7%AB%A0/">技术文章 (13)</a></li>
+    
+    <li><a href="https://www.hanstrovsky.com/categories/%E7%94%9F%E6%B4%BB%E6%96%87%E7%AB%A0/">生活文章 (1)</a></li>
+    
+</ul>
+    </section>
+
+    <section class="widget">
+        <h3 class="widget-title">最近文章</h3>
+<ul class="widget-list">
+    
+    <li>
+        <a href="https://www.hanstrovsky.com/2020/04/28/001.html" title="伤其十指，不如断其一指，谈谈我的学习计划">伤其十指，不如断其一指，谈谈我的学习计划</a>
+    </li>
+    
+    <li>
+        <a href="https://www.hanstrovsky.com/2020/04/18/001.html" title="如何使用swagger生成漂亮的接口文档">如何使用swagger生成漂亮的接口文档</a>
+    </li>
+    
+    <li>
+        <a href="https://www.hanstrovsky.com/2020/03/29/001.html" title="如何在Linux服务器上部署jar包">如何在Linux服务器上部署jar包</a>
+    </li>
+    
+    <li>
+        <a href="https://www.hanstrovsky.com/2020/03/11/001.html" title="使用PageHelper插件分页时，如何对对象进行转换以及添加属性">使用PageHelper插件分页时，如何对对象进行转换以及添加属性</a>
+    </li>
+    
+    <li>
+        <a href="https://www.hanstrovsky.com/2020/03/04/001.html" title="在Java中使用Collections.sort 依据多个字段排序 ">在Java中使用Collections.sort 依据多个字段排序 </a>
+    </li>
+    
+    <li>
+        <a href="https://www.hanstrovsky.com/2020/02/26/001.html" title="关于JAVA中源码级注解的编写及使用 ">关于JAVA中源码级注解的编写及使用 </a>
+    </li>
+    
+    <li>
+        <a href="https://www.hanstrovsky.com/2020/02/19/001.html" title="关于数据库设计的三范式与反三范式 ">关于数据库设计的三范式与反三范式 </a>
+    </li>
+    
+    <li>
+        <a href="https://www.hanstrovsky.com/2020/02/12/001.html" title="如何使用Spring Securiry实现前后端分离项目的登录功能">如何使用Spring Securiry实现前后端分离项目的登录功能</a>
+    </li>
+    
+    <li>
+        <a href="https://www.hanstrovsky.com/2020/02/05/001.html" title="关于配置Nginx反向代理后SpringSecurity认证失败的问题解决">关于配置Nginx反向代理后SpringSecurity认证失败的问题解决</a>
+    </li>
+    
+    <li>
+        <a href="https://www.hanstrovsky.com/2020/01/29/001.html" title="如何在后台封装el-tree所需要的数据格式">如何在后台封装el-tree所需要的数据格式</a>
+    </li>
+    
+</ul>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">标签</h3>
+<div class="tagcloud">
+    
+    <a href="https://www.hanstrovsky.com/tags/Collections.sort/">Collections.sort</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/JPA/">JPA</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/Java/">Java</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/Java%E6%B3%A8%E8%A7%A3/">Java注解</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/Jwt/">Jwt</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/PageHelper/">PageHelper</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/el-tree/">el-tree</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/ioc/">ioc</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/nginx/">nginx</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/spring/">spring</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/springsecurity/">springsecurity</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/swagger/">swagger</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/%E4%B8%89%E8%8C%83%E5%BC%8F/">三范式</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5/">依赖注入</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/%E5%88%86%E9%A1%B5/">分页</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/%E5%A4%9A%E5%AD%97%E6%AE%B5%E6%8E%92%E5%BA%8F/">多字段排序</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/%E5%AD%A6%E4%B9%A0/">学习</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/%E5%AD%A6%E4%B9%A0%E8%AE%A1%E5%88%92/">学习计划</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/%E5%B1%80%E9%83%A8%E6%9B%B4%E6%96%B0/">局部更新</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/%E6%8E%92%E5%BA%8F/">排序</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/%E6%8E%A5%E5%8F%A3%E6%96%87%E6%A1%A3/">接口文档</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/%E6%B3%A8%E8%A7%A3/">注解</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/%E7%94%9F%E6%B4%BB/">生活</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/%E7%99%BB%E5%BD%95/">登录</a>
+    
+    <a href="https://www.hanstrovsky.com/tags/%E8%AE%A4%E8%AF%81/">认证</a>
+    
+</div>
+    </section>
+
+    
+
+    <section class="widget">
+        <h3 class="widget-title">其它</h3>
+        <ul class="widget-list">
+            <li><a href="https://www.hanstrovsky.com/index.xml">文章 RSS</a></li>
+        </ul>
+    </section>
+</div>
+      </div>
+    </div>
+  </div>
+</body>
+<footer id="footer">
+    <div class="container">
+      Copyright &copy; 2020 <a href="https://www.hanstrovsky.com">Hanstrovsky | Improving little by little everyday.</a>
+    </div>
+</footer>
+
+
+    
+    <script type="text/javascript">
+        window.MathJax = {
+            tex2jax: {
+                inlineMath: [['$', '$']],
+                processEscapes: true
+                }
+            };
+    </script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+
+
+<a id="rocket" href="#top"></a>
+<script type="text/javascript" src='/js/totop.js?v=0.0.0' async=""></script>
+
+
+
+    <script type="text/javascript" src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" async></script>
+
+
+
+
+    <script src='/js/douban.js'></script>
+
+
+</html>
