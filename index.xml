@@ -2,53 +2,53 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Hanstrovsky</title>
-    <link>https://www.hanstrvosky.com/</link>
+    <link>https://www.hanstrovsky.com/</link>
     <description>Recent content on Hanstrovsky</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Wed, 01 Jan 2020 21:00:00 +0000</lastBuildDate><atom:link href="https://www.hanstrvosky.com/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 01 Jan 2020 21:00:00 +0000</lastBuildDate><atom:link href="https://www.hanstrovsky.com/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>伤其十指，不如断其一指，谈谈我的学习计划</title>
-      <link>https://www.hanstrvosky.com/post/1.html</link>
+      <link>https://www.hanstrovsky.com/post/1.html</link>
       <pubDate>Wed, 01 Jan 2020 21:00:00 +0000</pubDate>
       
-      <guid>https://www.hanstrvosky.com/post/1.html</guid>
+      <guid>https://www.hanstrovsky.com/post/1.html</guid>
       <description>一个不能被有效执行的计划，做的再好，也是烂计划。 计划的三要素 我认为计划有三个要素，一是目标，二是时间，三是事务，计划就是在某个时间要达成某个目标所需要做的事务清单，同一个时间段，目标要简单明确，并且不宜过多，时间要清晰，事务要具体。像前段时间我做的计划就不合理，完全围绕着时间展开</description>
     </item>
     
     <item>
       <title>书单</title>
-      <link>https://www.hanstrvosky.com/books/</link>
+      <link>https://www.hanstrovsky.com/books/</link>
       <pubDate>Wed, 01 Jan 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://www.hanstrvosky.com/books/</guid>
+      <guid>https://www.hanstrovsky.com/books/</guid>
       <description>书籍是人类进步的阶梯，要想进步，必须多读书。以下是我想要读的一些书的清单，也有些已经读过，记录在此。 《巴菲特与索罗斯的投资习惯》（纪念版）作者: (澳大利亚)马克·泰尔 《安全边际》—— 赛斯卡拉曼 《巴菲特致股东的信1957-2010》建议，去找本《滚雪球》，看看老巴做那些事情的时候（</description>
     </item>
     
     <item>
       <title>关于我</title>
-      <link>https://www.hanstrvosky.com/about/</link>
-      <pubDate>Tue, 10 Mar 2015 00:13:27 +0000</pubDate>
+      <link>https://www.hanstrovsky.com/about/</link>
+      <pubDate>Wed, 01 Jan 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://www.hanstrvosky.com/about/</guid>
-      <description>《Go 实战笔记》系列作者，《Golang Gin 实战》系列作者，《Android Gradle权威指南》作者，现负责技术管理。 Android Gradle权威指南 公众号，扫码关注</description>
+      <guid>https://www.hanstrovsky.com/about/</guid>
+      <description>见识不多，水平不高，好在一直努力接受新鲜事物， 我就是我，热爱生活。</description>
     </item>
     
     <item>
       <title>归档</title>
-      <link>https://www.hanstrvosky.com/archives/</link>
+      <link>https://www.hanstrovsky.com/archives/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://www.hanstrvosky.com/archives/</guid>
+      <guid>https://www.hanstrovsky.com/archives/</guid>
       <description></description>
     </item>
     
     <item>
       <title>搜索</title>
-      <link>https://www.hanstrvosky.com/search/</link>
+      <link>https://www.hanstrovsky.com/search/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://www.hanstrvosky.com/search/</guid>
+      <guid>https://www.hanstrovsky.com/search/</guid>
       <description></description>
     </item>
     
